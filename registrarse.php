@@ -1,3 +1,6 @@
+<?php
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="es">
 
@@ -9,7 +12,7 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+Dogra&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/Footer-Basic-icons.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>

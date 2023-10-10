@@ -1,9 +1,8 @@
 <?php
 (session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión de PHP si no está iniciada
 
-// Incluir archivo de conexión, clase Auth y archivo de funciones
-require_once 'clases/conexion.php';
-require_once 'clases/auth.php';
+// Incluir las funciones
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 // Instancia de conexión y autenticación
 $conexion = new Conexion();

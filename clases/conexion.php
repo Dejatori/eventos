@@ -29,7 +29,7 @@ class Conexion
     }
 
     // Función para cerrar la conexión a la base de datos
-    public function cerrar_conexion(): void
+    public function cerrarConexion(): void
     {
         $this->conexion = null; // null: destruye la conexión
     }

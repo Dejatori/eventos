@@ -1,7 +1,5 @@
 <?php
-// Incluir archivo de conexión, clase Auth y archivo de funciones
-require_once 'clases/conexion.php';
-require_once 'clases/auth.php';
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 // Instancia de conexión y autenticación
 $conexion = new Conexion();
