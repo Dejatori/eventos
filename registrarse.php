@@ -28,13 +28,15 @@
                             <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
                                     <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"></path>
                                 </svg></div>
-                            <form class="text-center" method="post">
+                            <form class="text-center" action="registrar-usuario.php" method="post">
                                 <div class="mb-3"><input class="form-control form-control-lg" type="email" name="email" inputmode="email" placeholder="correo" required="" minlength="4"></div>
                                 <div class="mb-3"><input class="form-control form-control-lg" type="password" name="password" placeholder="*********" required="" minlength="8"></div>
-                                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Iniciar sesión</button>
+                                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Registrarse</button>
                                     <p class="text-muted" style="margin: 10px;">¿Ya tienes cuenta?</p><a href="iniciar-sesion.php">Iniciar sesión</a>
                                 </div>
                                 <?php
+                                $_SESSION['register_success'] = null;
+                                $_SESSION['register_error'] = null;
                                 if (!empty($_SESSION['register_success'] || $_SESSION['register_error'])) {
                                     echo $_SESSION['register_success'];
                                     echo $_SESSION['register_error'];

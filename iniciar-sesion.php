@@ -1,6 +1,6 @@
 <?php
 // Incluir los archivos necesarios 
-require_once 'clase_auth.php';
+require_once 'clases/auth.php';
 
 (session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión si no está iniciada
 
@@ -49,9 +49,10 @@ if (isset($_SESSION['usuario_id'])) {
                                     <input class="form-control form-control-lg" type="password" name="password" placeholder="*********" minlength="8" required></div>
                                 <div class="mb-3">
                                     <button class="btn btn-primary d-block w-100" type="submit">Iniciar sesión</button>
-                                    <p class="text-muted" style="margin: 10px;">¿Aún no tienes cuenta?</p><a href="registrarse.html">Registrarse</a>
+                                    <p class="text-muted" style="margin: 10px;">¿Aún no tienes cuenta?</p><a href="registrarse.php">Registrarse</a>
                                 </div>
                                 <?php
+                                $_SESSION['login_error'] = null;
                                 if (!empty($_SESSION['login_error'])) {
                                     echo $_SESSION['login_error'];
                                     unset($_SESSION['login_error']);
