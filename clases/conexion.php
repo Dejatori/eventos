@@ -27,12 +27,5 @@ class Conexion
             exit(); // Termina la ejecución del script
         }
     }
-
-    // Función para cerrar la conexión a la base de datos
-    public function cerrarConexion(): void
-    {
-        $this->conexion = null; // null: destruye la conexión
-    }
 }
-
 ?>

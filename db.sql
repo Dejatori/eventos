@@ -17,7 +17,7 @@ CREATE TABLE usuarios
     Correo             VARCHAR(150)                       NOT NULL UNIQUE,
     Clave              CHAR(60)                           NOT NULL,
     Fecha_De_Registro  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY (ID_Usuario, Tipo_Usuario),
+    PRIMARY KEY (ID_Usuario),
     INDEX              idx_usuarios_correo (Correo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -57,7 +57,7 @@ CREATE TABLE eventos
 
 -- Crear 10 eventos
 
-INSERT INTO ´eventos´ (Nombre_Evento, Descripcion_Evento, Fecha_De_Registro, Lugar, Fecha_Y_Hora)
+INSERT INTO eventos (Nombre_Evento, Descripcion_Evento, Fecha_De_Registro, Lugar, Fecha_Y_Hora)
     VALUES
     ('Evento1', 'Gallinas 2x1', '2023-10-01 06:00:00', 'Galpon 1', '2023-10-01 07:10:55'),
     ('Evento2', 'Amarillo amarillo platano', '2023-10-02 06:10:55', 'Palmas 1', '2023-10-06 13:10:55'),

@@ -1,6 +1,7 @@
 <?php
-require_once 'clases/conexion.php'; // Archivo que contiene la configuración de la base de datos
-require_once 'clases/auth.php'; // Archivo que contiene la clase Auth
+require_once $_SERVER['DOCUMENT_ROOT'] . "/eventos/servidor/dirs.php";
+require_once (CLASS_PATH . 'conexion.php');
+require_once (CLASS_PATH . 'auth.php');
 
 // Función para conectar a la base de datos
 function obtenerConexion(): PDO
