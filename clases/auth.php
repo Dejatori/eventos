@@ -19,31 +19,44 @@ class Auth
     {
         $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // password_hash(): encripta la contraseña
 
-        // Insertar datos en la tabla usuarios
-        $sql = 'INSERT INTO usuarios (Nombre, Apellido, Correo, Clave) 
+        // Verificar si el correo ya existe en la base de datos
+        $check_sql = 'SELECT ID_Usuario FROM usuarios WHERE Correo = :correo';
+        $check_stmt = $this->conexion->prepare($check_sql);
+        $check_stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
+        $check_stmt->execute();
+
+        if ($check_stmt->fetchColumn()) {
+            // El correo ya existe, muestra un mensaje de error
+            mostrar_mensaje_registro($_SESSION['register_message'] = 2);
+            header("location: registrarse.php");
+            // cerrar la conexión
+            $check_stmt = null;
+        } else {
+            // El correo no existe, se procede a registrar el usuario
+            $sql = 'INSERT INTO usuarios (Nombre, Apellido, Correo, Clave) 
                 VALUES (:nombre, :apellido, :correo, :clave_encriptada)';
 
-        // Preparar la consulta SQL
-        $stmt = $this->conexion->prepare($sql);
+            // Preparar la consulta SQL
+            $stmt = $this->conexion->prepare($sql);
 
-        // Vincular parámetros
-        // bindParam: vincula un parámetro con una variable de la clase PDOStatement (más información en https://www.php.net/manual/es/pdostatement.bindparam.php)
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->bindParam(':apellido', $apellido, PDO::PARAM_STR);
-        $stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
-        $stmt->bindParam(':clave_encriptada', $clave_encriptada, PDO::PARAM_STR);
+            // Vincular parámetros
+            // bindParam: vincula un parámetro con una variable de la clase PDOStatement (más información en https://www.php.net/manual/es/pdostatement.bindparam.php)
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':apellido', $apellido, PDO::PARAM_STR);
+            $stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
+            $stmt->bindParam(':clave_encriptada', $clave_encriptada, PDO::PARAM_STR);
 
-        // Ejecutar la consulta SQL
-        $stmt->execute();
-
-        // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
-        if ($stmt->execute()) {
-            echo 'El usuario ha sido registrado correctamente.';
-            return true;
-        } else {
-            echo 'Error al registrar el usuario.';
-            return false;
+            // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
+            if ($stmt->execute()) {
+                $_SESSION['register_message'] = 3;
+                return true;
+            } else {
+                $_SESSION['register_message'] = 1;
+                return false;
+            }
         }
+        // Cerrar la conexión
+        $stmt = null;
     }
 
     // Función para logear un usuario
@@ -66,5 +79,7 @@ class Auth
         } else {
             return false;
         }
+        // Cerrar la conexión
+        $stmt = null;
     }
 }

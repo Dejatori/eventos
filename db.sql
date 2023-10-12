@@ -31,7 +31,7 @@ CREATE TRIGGER before_insert_usuarios
     FOR EACH ROW
 BEGIN
     DECLARE next_val INT;
-    SET next_val = (SELECT MAX(RIGHT(Cod_Usuario, 5)) + 1 FROM usuarios WHERE ID_Afiliado LIKE 'COD-%');
+    SET next_val = (SELECT MAX(RIGHT(Cod_Usuario, 5)) + 1 FROM usuarios WHERE Cod_Usuario LIKE 'COD-%');
     IF next_val IS NULL THEN
         SET next_val = 10000;
 END IF;
@@ -50,7 +50,7 @@ CREATE TABLE eventos
     Descripcion_Evento VARCHAR(500)                       NOT NULL,
     Fecha_De_Registro  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     Lugar              VARCHAR(200)                       NOT NULL,
-    Fecha_Y_Hora       DATETIME DEFAULT                   NULL,
+    Fecha_Y_Hora       DATETIME                           NOT NULL,
     PRIMARY KEY (ID_Evento),
     INDEX              idx_eventos_nombre (Nombre_Evento)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -73,3 +73,17 @@ INSERT INTO eventos (Nombre_Evento, Descripcion_Evento, Fecha_De_Registro, Lugar
 -- Ordenar eventos por fecha
 
 SELECT * FROM eventos ORDER BY Fecha_Y_Hora;
+
+-- Tabla de eventos eliminados
+
+CREATE TABLE eventos_eliminados
+(
+    ID_Evento               INT                                NOT NULL,
+    Nombre_Evento           VARCHAR(200)                       NOT NULL,
+    Descripcion_Evento      VARCHAR(500)                       NOT NULL,
+    Fecha_De_Eliminacion    DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    Lugar                   VARCHAR(200)                       NOT NULL,
+    Fecha_Y_Hora            DATETIME                           NOT NULL,
+    PRIMARY KEY (ID_Evento),
+    INDEX              idx_eventos_nombre (Nombre_Evento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

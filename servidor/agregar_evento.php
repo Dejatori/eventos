@@ -9,9 +9,12 @@ if (isset($_POST["agregar_evento"])) {
     $descripcion = $_POST["descripcion"];
     $lugar = $_POST["lugar"];
     $fecha_hora = $_POST["fecha_hora"];
+
+    // Conectar a la base de datos
+    $conexion = obtenerConexion();
     
     // Preparar sentencia
-    $sentencia = $conexion -> prepare("INSERT INTO eventos (nombre, descripcion, lugar, fecha_hora) VALUES (:nombre, :descripcion, :lugar, :fecha_hora)");
+    $sentencia = $conexion -> prepare("INSERT INTO eventos (Nombre_evento, Descripcion_Evento, Lugar, Fecha_Y_Hora) VALUES (:nombre, :descripcion, :lugar, :fecha_hora)");
 
     // Vincular parámetros
     $sentencia -> bindParam(':nombre', $nombre);
@@ -21,12 +24,11 @@ if (isset($_POST["agregar_evento"])) {
 
     // Ejecutar sentencia
     if ($sentencia->execute()) {
-        return ($_SESSION["form_status"] == "success");
-        header(location: "/eventos/novedades.php");
+        mostrar_mensaje_evento($_SESSION['evento_message'] = 2);
     } else {
-        return ($_SESSION["form_status"] == "error");
-        header(location: "/eventos/novedades.php");
+        mostrar_mensaje_evento($_SESSION['evento_message'] = 1);
     }
+    header("location: ../novedades.php");
 }
 
 ?>

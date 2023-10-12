@@ -1,12 +1,87 @@
-html {
-    width: 100%;
-    height: 100vh;
+:root {
+    scroll-behavior: smooth;
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
+html, body {
+    height: 100%;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#wrapper #content-wrapper {
+    background-color: #f8f9fc;
     width: 100%;
+    overflow-x: hidden;
+}
+
+#wrapper #content-wrapper #content {
+    flex: 1 0 auto;
+}
+
+
+.sticky-footer {
+    padding: 2rem 0;
+    flex-shrink: 0;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+th {
+    text-align: inherit;
+    text-align: -webkit-match-parent;
+}
+
+thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--bs-gray-600);
+}
+
+tbody + tbody {
+    border-top: 2px solid var(--bs-gray-600);
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    vertical-align: top;
+    border-color: inherit;
+}
+
+.table > tbody {
+    vertical-align: inherit;
+}
+
+.table > thead {
+    vertical-align: bottom;
+}
+
+.scroll-to-top {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    text-align: center;
+    color: #fff;
+    background: rgba(90, 92, 105, 0.5);
+    line-height: 46px;
+}
+
+.scroll-to-top:focus,
+.scroll-to-top:hover {
+    color: #fff;
+}
+.scroll-to-top:hover {
+    background: #5a5c69;
+}
+.scroll-to-top i {
+    font-weight: 800;
 }
 
 /* Iconos */

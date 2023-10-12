@@ -6,7 +6,7 @@ $conexion = new Conexion();
 $Auth = new Auth($conexion);
 
 // Verificar si el formulario ha sido enviado
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST["registrar_usuario"])) {
 
     // Recuperar los datos del formulario
     $nombre = $_POST["nombre"];
@@ -17,17 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Insertar el nuevo usuario en la base de datos
     if ($Auth->registrar_usuario($nombre, $apellido, $correo, $clave)) {
         // Mensaje de se ha registrado un usuario exitosamente
-        $_SESSION['register_success'] = "<div class='alert alert-success'>
-                                        <strong>Se ha registrado exitosamente su usuario.</strong>.
-                                    </div>";
-        // Redirigir al usuario a la página de registrarse
-        header("location: registrarse.php");
-        exit(); // Detener el script
+        mostrar_mensaje_registro($_SESSION['register_message'] = 3);
     } else {
         // Mensaje de error al registrar un usuario
-        $_SESSION['register_error'] = "<div class='alert alert-danger'>
-                                        <strong>Ha ocurrido un error al registrar su usuario. Por favor, inténtelo de nuevo.</strong>.
-                                    </div>";
-        header("location: registrarse.php");
+        mostrar_mensaje_registro($_SESSION['register_message'] = 1);
     }
+    header("location: registrarse.php");
 }

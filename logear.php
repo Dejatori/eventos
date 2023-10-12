@@ -1,6 +1,4 @@
 <?php
-(session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión de PHP si no está iniciada
-
 // Incluir las funciones
 require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
