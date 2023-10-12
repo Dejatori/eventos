@@ -29,7 +29,7 @@
                 </li>
                 <?php if (isset($_SESSION['usuario_id'])) { ?>
                     <li class="nav-item" style="margin: 0 0 0 20px;">
-                        <form method="post">
+                        <form method="POST">
                             <button type="submit" class="btn btn-primary border rounded ms-auto" name="cerrar_sesion">
                                 Cerrar sesión
                                 <i class="fas fa-sign-out-alt"></i>

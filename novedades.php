@@ -74,9 +74,36 @@ try {
                 <main>
                     <section>
                         <div class="container">
-                            <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
-                            <a type="button" class="btn btn-primary float-end mb-2" data-bs-toggle="modal" data-bs-target="#registerModal">Agregar evento</a>
-                            <table class="table">
+                        <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
+                        <a type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#registerModal">Agregar evento</a>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 text-nowrap">
+                                        <div id="eventTable_length" class="eventTables_length" aria-controls="eventTable">
+                                            <label class="form-label">Filtrar por
+                                                <select class="d-inline-block form-select form-select-sm">
+                                                    <option>Ordenar por</option>
+                                                    <option value="1">ID-Evento</option>
+                                                    <option value="2">Nombre</option>
+                                                    <option value="3">Descripción</option>
+                                                    <option value="4">Fecha de registro</option>
+                                                    <option value="5">Lugar</option>
+                                                    <option value="6">Fecha y Hora</option>
+                                                </select>&nbsp;
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-md-end eventTables_filter" id="eventTable_filter">
+                                            <label class="form-label">
+                                                <input type="search" class="form-control form-control-sm" aria-controls="eventTable" placeholder="Buscar">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="eventTable" role="grid" aria-describedby="eventTable_info">
+                            <table class="table my-0" id="eventTable">
                                 <thead>
                                     <tr>
                                         <th scope="col">ID-Evento</th>

@@ -42,6 +42,29 @@ if (isset($_POST['login_user'])) {
     }
 }
 
+// Función para registrar un usuario
+if (isset($_POST["registrar_usuario"])) {
+
+    // Instancia de conexión y autenticación
+    $conexion = new Conexion();
+    $Auth = new Auth($conexion);
+    $nombre = $_POST["nombre"];
+    $apellido = $_POST["apellido"];
+    $correo = $_POST["correo"];
+    $clave = $_POST["clave"];
+
+    // Insertar el nuevo usuario en la base de datos
+    if ($Auth->registrar_usuario($nombre, $apellido, $correo, $clave)) {
+        // Mensaje de se ha registrado un usuario exitosamente
+        $_SESSION['register_message'] = 3;
+    } else {
+        // Mensaje de error al registrar un usuario
+        $_SESSION['register_message'] = 1;
+    } 
+    header("location: registrarse.php");
+    exit();
+}
+
 // Función para cerrar la sesión
 function cerrarSesion() : bool
 {
