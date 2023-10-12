@@ -19,6 +19,11 @@ function cerrarSesion(): void
     session_destroy();
 }
 
+if (isset($_POST['cerrar_sesion'])) {
+    cerrarSesion();
+    header('Location: index.php');
+}
+
 $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
 
 // Función para verificar si el usuario está logeado

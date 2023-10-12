@@ -3,6 +3,11 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 $logeado = verificarLogin();
 
+// Redireccionar al error 403 si el usuario no está logeado
+if ($logeado == false) {
+    header('Location: 403.html');
+}
+
 try {
     // Crear una instancia de la clase Conexion
     $conexion = new Conexion();

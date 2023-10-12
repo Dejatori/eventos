@@ -23,6 +23,18 @@
                                 class="btn btn-primary ms-auto <?php if (str_contains($url, '/eventos/registrarse.php')) echo 'active'; ?>"
                                 role='button' href='registrarse.php'
                                 style="font-family: 'Noto Serif Dogra', serif;font-size: 16px;">Registrarse</a></li>
+                    <?php 
+                    if (isset($_SESSION['usuario_id'])) {
+                        echo "
+                        <li class='nav-item' style='margin: 0 0 0 20px;'>
+                            <form method='post'>
+                                <button type='submit' class='border rounded ms-auto' name='cerrar_sesion'>
+                                    <i class='fas fa-sign-out-alt'></i>
+                                </button>
+                            </form>
+                        </li>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
