@@ -9,20 +9,18 @@ $Auth = new Auth($conexion);
 $correo = $_POST['correo'];
 $clave = $_POST['clave'];
 
-// Función para crear una cookie
+// Función para logear al usuario
 if (isset($_POST['correo']) && isset($_POST['clave'])) {
     
     if ($Auth->logear_usuario($correo, $clave)) {
-        header('Location: novedades.php');
+        $_SESSION['login_message'] = 3;
+        header('Location: index.php');
     } else {
-        $_SESSION['login_error'] = "<div class='alert alert-danger'>
-                                        <strong>El correo electrónico o la contraseña son incorrectos. Por favor, inténtalo de nuevo.</strong>.
-                                    </div>";
+        $_SESSION['login_message'] = 1;
         header('Location: iniciar-sesion.php');
     }
 } else {
-    $_SESSION['login_error'] = "<div class='alert alert-danger'>
-                                    <strong>El correo electrónico o la contraseña son incorrectos. Por favor, inténtalo de nuevo.</strong>.
-                                </div>";
+    $_SESSION['login_message'] = 2;
     header('Location: iniciar-sesion.php');
 }
+?>

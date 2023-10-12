@@ -3,8 +3,17 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 $logeado = verificarLogin();
 
+// Redirigir al usuario a index.php si cerró sesión despues de 3 segundos
+if (!empty($_SESSION['logout_message'])) {
+    echo '<script>
+            setTimeout(function () {
+                window.location.href = "/eventos/index.php";
+            }, 3000);
+          </script>';
+}
+
 // Redireccionar al error 403 si el usuario no está logeado
-if ($logeado == false) {
+if ($logeado == false && empty($_SESSION['logout_message'])) {
     header('Location: 403.html');
 }
 
@@ -20,33 +29,21 @@ try {
     if (isset($_GET['eventID'])) {
         $Eliminar = moverYeliminarEvento($pdo, $_GET, $_GET['eventID']);
 
-        if ($Eliminar == true) {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 4);
-        } else {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 1);
-        }
+        $_SESSION['event_message'] = ($Eliminar ? 4 : 1);
     }
 
     // Actualizar el registro en la tabla eventos
     if (isset($_POST['actualizar_evento'])) {
         $Actualizar = actualizarEvento($pdo, $_POST);
 
-        if ($Actualizar == true) {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 3);
-        } else {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 1);
-        }
+        $_SESSION['event_message'] = ($Actualizar ? 3 : 1);
     }
 
     // Agregar un registro a la tabla eventos
     if (isset($_POST["agregar_evento"])) {
         $Agregar = agregarEvento($pdo, $_POST);
 
-        if ($Agregar == true) {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 2);
-        } else {
-            mostrar_mensaje_evento($_SESSION['evento_message'] = 1);
-        }
+        $_SESSION['event_message'] = ($Agregar ? 2 : 1);
     }
 } catch (PDOException $e) {
     // Mostrar mensaje de error con un echo
@@ -189,12 +186,12 @@ try {
                         <div class='modal fade' id='successModal' tabindex='-1' role='dialog' aria-labelledby='successModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog modal-dialog-centered'>
-                                <div class='modal-content text-success'>
+                                <div class='modal-content'>
                                     <div class='modal-header'>
-                                        <h5 class='modal-title' id='successModalLabel'>Éxito</span></h5>
+                                        <h5 class='modal-title text-success' id='successModalLabel'>Éxito</span></h5>
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
-                                    <div class='modal-body'>
+                                    <div class='modal-body fw-bold'>
                                         <p>¡Se ha agregado el evento! Se recargará la página en 5 segundos.</p>
                                     </div>
                                     <div class='modal-footer'>
@@ -208,12 +205,12 @@ try {
                         <div class='modal fade' id='errorModal' tabindex='-1' role='dialog' aria-labelledby='errorModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog modal-dialog-centered'>
-                                <div class='modal-content text-danger'>
+                                <div class='modal-content'>
                                     <div class='modal-header'>
-                                        <h5 class='modal-title' id='errorModalLabel'>Error</h5>
+                                        <h5 class='modal-title text-danger' id='errorModalLabel'>Error</h5>
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
-                                    <div class='modal-body'>
+                                    <div class='modal-body fw-bold'>
                                         <p>Lo sentimos, ocurrió un error al procesar tu solicitud. Por favor, intenta nuevamente más
                                             tarde. Se recargará la página en 5 segundos.</p>
                                     </div>
@@ -228,12 +225,12 @@ try {
                         <div class='modal fade' id='confirmModal' tabindex='-1' role='dialog' aria-labelledby='confirmModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog modal-dialog-centered'>
-                                <div class='modal-content text-danger'>
+                                <div class='modal-content'>
                                     <div class='modal-header'>
-                                        <h5 class='modal-title' id='confirmModalLabel'>Confirmación</h5>
+                                        <h5 class='modal-title text-danger' id='confirmModalLabel'>Confirmación</h5>
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
-                                    <div class='modal-body'>
+                                    <div class='modal-body fw-bold'>
                                         <p>¿Estás seguro de que deseas eliminar este evento?</p>
                                     </div>
                                     <div class='modal-footer'>
@@ -247,12 +244,12 @@ try {
                         <div class='modal fade' id='updatedModal' tabindex='-1' role='dialog' aria-labelledby='updatedModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog modal-dialog-centered'>
-                                <div class='modal-content text-success'>
+                                <div class='modal-content'>
                                     <div class='modal-header'>
-                                        <h5 class='modal-title' id='updatedModalLabel'>Actualizado</h5>
+                                        <h5 class='modal-title text-success' id='updatedModalLabel'>Actualizado</h5>
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
-                                    <div class='modal-body'>
+                                    <div class='modal-body fw-bold'>
                                         <p>Se ha actualizado correctamente el evento. Se recargará la página en 5 segundos.</p>
                                     </div>
                                     <div class='modal-footer'>
@@ -265,12 +262,12 @@ try {
                         <div class='modal fade' id='deleteModal' tabindex='-1' role='dialog' aria-labelledby='errorModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog modal-dialog-centered'>
-                                <div class='modal-content text-success'>
+                                <div class='modal-content'>
                                     <div class='modal-header'>
-                                        <h5 class='modal-title' id='deleteModalLabel'>Eliminado</h5>
+                                        <h5 class='modal-title text-success' id='deleteModalLabel'>Eliminado</h5>
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
-                                    <div class='modal-body'>
+                                    <div class='modal-body fw-bold'>
                                         <p>Se ha eliminado correctamente el evento. Se recargará la página en 5 segundos.</p>
                                     </div>
                                     <div class='modal-footer'>
@@ -287,33 +284,7 @@ try {
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
-<script>
-    <?php
-    if (!empty($_SESSION['evento_message'])) {
-        echo $_SESSION['evento_message'];
-        unset ($_SESSION['evento_message']);
-        echo "setTimeout(function () {
-            window.location.href = 'novedades.php';
-        }, 5000);" ;
-    };
-    ?>
-    $('#confirmModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget); // Botón que activó el modal
-        let eventID = button.data('id'); // ID del evento
-
-        // Actualiza el enlace de "Eliminar" en el modal con el ID del evento
-        let deleteLink = $('#deleteEventLink');
-        deleteLink.attr('href', 'novedades.php?eventID=' + eventID);
-    });
-    $('#updateModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget);
-        let editID_evento = button.data('id');
-
-        // Actualiza el value en el modal con el ID del evento
-        let editModal = $('#editID_evento');
-        editModal.attr('value', editID_evento);
-    });
-</script>
+<?php require_once "servidor/alerts.php"; ?>
 
 </body>
 

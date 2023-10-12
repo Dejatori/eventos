@@ -5,6 +5,8 @@ require_once (CLASS_PATH . 'conexion.php');
 require_once (CLASS_PATH . 'auth.php');
 require_once (SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de error y éxito
 
+$url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
+
 // Función para conectar a la base de datos
 function obtenerConexion(): PDO
 {
@@ -12,26 +14,50 @@ function obtenerConexion(): PDO
     $pdo = $conexion->conectar();
 }
 
+// Logear usuario
+$errorLogin = false;
+if (isset($_POST['login_user'])) {
+
+    // Instancia de conexión y autenticación
+    $conexion = new Conexion();
+    $Auth = new Auth($conexion);
+    $correo = $_POST['correo'];
+    $clave = $_POST['clave'];
+    
+    if ($Auth->logear_usuario($correo, $clave)) {
+        $_SESSION['login_message'] = 3;
+        header('Location: index.php');
+        exit();
+    } else {
+        $_SESSION['login_message'] = 1;
+        header('Location: iniciar-sesion.php');
+        exit();   
+    }
+    $errorLogin = true;
+} else {
+    if ($errorLogin === true) {
+        $_SESSION['login_message'] = 2;
+        header('Location: iniciar-sesion.php');
+        exit();
+    }
+}
+
 // Función para cerrar la sesión
-function cerrarSesion(): void
+function cerrarSesion() : bool
 {
     session_unset();
     session_destroy();
+    return true ? true : false;
 }
 
 if (isset($_POST['cerrar_sesion'])) {
-    cerrarSesion();
-    header('Location: index.php');
+    $_SESSION['logout_message'] = cerrarSesion() ? 1 : 2;
 }
 
-$url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
-
 // Función para verificar si el usuario está logeado
-#[NoReturn] function verificarLogin(): void
+#[NoReturn] function verificarLogin(): bool
 {
-    if (!isset($_SESSION['usuario_id'])) {
-        header('Location: iniciar-sesion.php');
-    }
+    return isset($_SESSION['usuario_id']); // Devuelve true si el usuario está logeado
 }
 
 // Función para obtener los datos de la sesión

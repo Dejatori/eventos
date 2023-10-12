@@ -87,6 +87,7 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
+<?php require_once "servidor/alerts.php"; ?>
 
 </body>
 
