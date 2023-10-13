@@ -1,3 +1,10 @@
 # Personalización de mensajes de error
 ErrorDocument 404 /eventos/404.html
 ErrorDocument 403 /eventos/403.html
+
+# Deshabilitar el listado de directorios
+Options -Indexes
+ErrorDocument 403 /eventos/403.html
+
+# Establecer inicio.php como página de indice por defecto
+DirectoryIndex inicio.php

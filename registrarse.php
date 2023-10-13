@@ -36,7 +36,7 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
                                             if (!empty($_SESSION['register_message'])) {
                                                 echo $mensaje = mostrar_mensaje_registro();
                                                 unset($_SESSION['register_message']);
-                                            };
+                                            }
                                         ?>
                                         <div class="card-body d-flex flex-column align-items-center">
                                             <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">

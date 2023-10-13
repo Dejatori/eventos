@@ -6,15 +6,17 @@ if (!empty($_SESSION['logout_message'])) {
             jQuery("#logoutModal").modal("show");
             });
           </script>';
-    unset($_SESSION['logout_message']);
-} else if (!empty($_SESSION['login_message'])) {
-    $mensaje = mostrar_mensaje_login();
+    unset ($_SESSION['logout_message']);
+}
+
+if (!empty($_SESSION['login_message'] ?? 3)) {
+    echo $mensaje = mostrar_mensaje_login();
     echo '<script>
             jQuery(document).ready(function () {
             jQuery("#loginModal").modal("show");
             });
           </script>';
-    unset($_SESSION['login_message']);
+    unset ($_SESSION['login_message']);
 }
 
 $mensajeEvento = mostrar_mensaje_evento();
@@ -26,7 +28,7 @@ if (!empty($_SESSION['event_message'])) {
                 window.location.href = "novedades.php";
             }, 5000);
           </script>';
-    unset($_SESSION['event_message']);
+    unset ($_SESSION['event_message']);
 }
 
 $scriptEvento = "
@@ -52,6 +54,6 @@ $scriptEvento = "
 ";
 
 // Si el usuario esta en novedades.php hace echo del scriptEvento
-if (strpos($_SERVER['REQUEST_URI'], 'novedades.php') !== false) {
+if (str_contains($_SERVER['REQUEST_URI'], 'novedades.php')) {
     echo $scriptEvento;
 }

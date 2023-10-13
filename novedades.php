@@ -3,13 +3,9 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 $logeado = verificarLogin();
 
-// Redirigir al usuario a index.php si cerró sesión despues de 3 segundos
+// Redirigir al usuario a inicio.php si cerró sesión despues de 3 segundos
 if (!empty($_SESSION['logout_message'])) {
-    echo '<script>
-            setTimeout(function () {
-                window.location.href = "/eventos/index.php";
-            }, 3000);
-          </script>';
+    header("Refresh: 2; URL = inicio.php");
 }
 
 // Redireccionar al error 403 si el usuario no está logeado

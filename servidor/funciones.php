@@ -12,6 +12,7 @@ function obtenerConexion(): PDO
 {
     $conexion = new Conexion();
     $pdo = $conexion->conectar();
+    return $pdo;
 }
 
 // Logear usuario
@@ -26,19 +27,13 @@ if (isset($_POST['login_user'])) {
     
     if ($Auth->logear_usuario($correo, $clave)) {
         $_SESSION['login_message'] = 3;
-        header('Location: index.php');
-        exit();
     } else {
         $_SESSION['login_message'] = 1;
-        header('Location: iniciar-sesion.php');
-        exit();   
     }
     $errorLogin = true;
 } else {
     if ($errorLogin === true) {
         $_SESSION['login_message'] = 2;
-        header('Location: iniciar-sesion.php');
-        exit();
     }
 }
 
@@ -78,9 +73,17 @@ if (isset($_POST['cerrar_sesion'])) {
 }
 
 // Función para verificar si el usuario está logeado
-#[NoReturn] function verificarLogin(): bool
+function verificarLogin(): bool
 {
     return isset($_SESSION['usuario_id']); // Devuelve true si el usuario está logeado
+}
+
+function volverIndex()
+{
+    if (verificarLogin()) {
+        header('location: inicio.php');
+        exit();
+    }
 }
 
 // Función para obtener los datos de la sesión

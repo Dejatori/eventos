@@ -1,0 +1,17 @@
+{
+  "name": "vendor_name/eventos",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "disable-tls": true,
+  "authors": [
+    {
+      "name": "Dejatori",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "^9.0",
+    "ext-pdo": "*"
+  }
+}

@@ -38,27 +38,6 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
                 </header>
                 <main>
                     <section class="container mt-4">
-                    <?php
-                        if (!empty($_SESSION['login_message'])) {
-                            $mensaje = mostrar_mensaje_login(); // Obtiene el mensaje
-                            echo '<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-label="loginModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title text-success">Has iniciado sesión correctamente</h5>
-                                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body fw-bold">
-                                                ' . $mensaje . ' <p>Bienvenido ' . $nombre . ' ' . $apellido . '!</p></div>' . '
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>';
-                        }
-                    ?>
                     </section>
                 </main>
 <?php require_once 'templates/footer.php'; ?>

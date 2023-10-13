@@ -1,8 +1,7 @@
 <?php
-// Incluir la clase de conexión a la base de datos
-require_once 'conexion.php';
+require_once '../clases/conexion.php';
 
-// Clase para autenticar usuarios
+/* auth.php sin funciones mostrar_mensaje_registro() y mostrar_mensaje_login() */
 class Auth
 {
     /**
@@ -34,9 +33,8 @@ class Auth
 
         if ($check_stmt->fetchColumn()) {
             // El correo ya existe, muestra un mensaje de error
-            mostrar_mensaje_registro($_SESSION['register_message'] = 2);
-            header('location: registrarse.php');
-            exit();
+            echo 'El correo ya existe';
+            return false;
         } else {
             // El correo no existe, se procede a registrar el usuario
             /** @noinspection SqlInsertValues */
@@ -55,10 +53,8 @@ class Auth
 
             // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
             if ($stmt->execute()) {
-                $_SESSION['register_message'] = 3;
                 return true;
             } else {
-                $_SESSION['register_message'] = 1;
                 return false;
             }
         }
@@ -84,5 +80,62 @@ class Auth
         } else {
             return false;
         }
+    }
+}
+
+class authTest extends PHPUnit\Framework\TestCase
+{
+    protected Auth $auth;
+
+    protected function setUp(): void
+    {
+        $conexion = new Conexion();
+        $this->auth = new Auth($conexion);
+    }
+
+    public function test1()
+    {
+        // Test registrar usuario con datos válidos
+        $nombre = 'John';
+        $apellido = 'Doe';
+        $correo = 'johndoe@example.com';
+        $clave = 'password123';
+        $result = $this->auth->registrar_usuario($nombre, $apellido, $correo, $clave);
+        $this->assertTrue($result);
+    }
+
+    public function test2() {
+        // Test registrar usuario con correo ya existente
+        $nombre = 'Jane';
+        $apellido = 'Doe';
+        $correo = 'johndoe@example.com';
+        $clave = 'password123';
+        $result = $this->auth->registrar_usuario($nombre, $apellido, $correo, $clave);
+        $this->assertFalse($result);
+    }
+
+    public function test3()
+    {
+        // Test logear usuario con datos válidos
+        $correo = 'johndoe@example.com';
+        $clave = 'password123';
+        $result = $this->auth->logear_usuario($correo, $clave);
+        $this->assertTrue($result);
+    }
+
+    public function test4() {
+        // Test logear usuario con correo inválido
+        $correo = 'invalid@example.com';
+        $clave = 'password123';
+        $result = $this->auth->logear_usuario($correo, $clave);
+        $this->assertFalse($result);
+    }
+    public function test5()
+    {
+        // Test logear usuario con contraseña inválida
+        $correo = 'johndoe@example.com';
+        $clave = 'invalidpassword';
+        $result = $this->auth->logear_usuario($correo, $clave);
+        $this->assertFalse($result);
     }
 }
