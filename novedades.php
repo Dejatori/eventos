@@ -145,59 +145,23 @@ try {
                         </div>
                     </section>
                     <script>
-                        // const filtro = document.querySelector('#filtro');
                         const busqueda = document.querySelector('#busqueda');
                         const tabla = document.querySelector('#eventTable tbody');
 
-                        // filtro.addEventListener('change', () => {
-                        //     const indiceFiltro = filtro.selectedIndex;
-                        //     const valorFiltro = filtro.options[indiceFiltro].value;
-                        //     const filas = tabla.querySelectorAll('tr');
-
-                        //     for (let i = 0; i < filas.length; i++) {
-                        //         const celdas = filas[i].querySelectorAll('td');
-                        //         let mostrarFila = false;
-
-                        //         for (let j = 0; j < celdas.length; j++) {
-                        //             const celda = celdas[j];
-
-                        //             if (celda.getAttribute('data-valor') === valorFiltro) {
-                        //                 mostrarFila = true;
-                        //                 break;
-                        //             }
-                        //         }
-
-                        //         if (mostrarFila) {
-                        //             filas[i].classList.remove('d-none');
-                        //         } else {
-                        //             filas[i].classList.add('d-none');
-                        //         }
-                        //     }
-                        // });
-
                         busqueda.addEventListener('keyup', () => {
                             const textoBusqueda = busqueda.value.toLowerCase().trim();
-                            const filas = tabla.querySelectorAll('tr');
+                            const filas = Array.from(tabla.querySelectorAll('tr'));
 
-                            for (let i = 0; i < filas.length; i++) {
-                                const celdas = filas[i].querySelectorAll('td');
-                                let mostrarFila = false;
-
-                                for (let j = 0; j < celdas.length; j++) {
-                                    const celda = celdas[j];
-
-                                    if (celda.textContent.toLowerCase().indexOf(textoBusqueda) !== -1) {
-                                        mostrarFila = true;
-                                        break;
-                                    }
-                                }
+                            filas.map((fila) => {
+                                const celdas = Array.from(fila.querySelectorAll('td'));
+                                const mostrarFila = celdas.filter((celda) => celda.textContent.toLowerCase().includes(textoBusqueda)).length > 0;
 
                                 if (mostrarFila) {
-                                    filas[i].classList.remove('d-none');
+                                    fila.classList.remove('d-none');
                                 } else {
-                                    filas[i].classList.add('d-none');
+                                    fila.classList.add('d-none');
                                 }
-                            }
+                            });
                         });
                     </script>
                     <section>
