@@ -70,14 +70,14 @@ try {
                 <main>
                     <section>
                         <div class="container">
-                        <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
-                        <a type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#registerModal">Agregar evento</a>
+                            <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
+                            <a type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#registerModal">Agregar evento</a>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 text-nowrap">
                                         <div id="eventTable_length" class="eventTables_length" aria-controls="eventTable">
                                             <label class="form-label">Filtrar por
-                                                <select class="d-inline-block form-select form-select-sm">
+                                                <select class="d-inline-block form-select form-select-sm" id="filtro">
                                                     <option>Ordenar por</option>
                                                     <option value="1">ID-Evento</option>
                                                     <option value="2">Nombre</option>
@@ -92,53 +92,74 @@ try {
                                     <div class="col-md-6">
                                         <div class="text-md-end eventTables_filter" id="eventTable_filter">
                                             <label class="form-label">
-                                                <input type="search" class="form-control form-control-sm" aria-controls="eventTable" placeholder="Buscar">
+                                                <input type="search" class="form-control form-control-sm" aria-controls="eventTable" placeholder="Buscar" id="busqueda">
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="table-responsive table mt-2" id="eventTable" role="grid" aria-describedby="eventTable_info">
-                            <table class="table my-0" id="eventTable">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID-Evento</th>
-                                        <th scope="col">Nombre</th>
-                                        <th scope="col">Descripción</th>
-                                        <th scope="col">Fecha de registro</th>
-                                        <th scope="col">Lugar</th>
-                                        <th scope="col">Fecha y Hora</th>
-                                        <th scope="col">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    // Mostrar los registros en la tabla
-                                    if ($lista_eventos->rowCount() > 0) {
-                                        while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
-                                            echo "<tr>";
-                                            echo "<td>" . $row["ID_Evento"] . "</td>";
-                                            echo "<td>" . $row["Nombre_Evento"] . "</td>";
-                                            echo "<td>" . $row["Descripcion_Evento"] . "</td>";
-                                            echo "<td>" . $row["Fecha_De_Registro"] . "</td>";
-                                            echo "<td>" . $row["Lugar"] . "</td>";
-                                            echo "<td>" . $row["Fecha_Y_Hora"] . "</td>";
-                                            echo "<td>
-                                                    <button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#updateModal' data-id='" . $row["ID_Evento"] . "'>Editar</button>
-                                                    <button type='button' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#confirmModal' data-id='" . $row["ID_Evento"] . "'>Eliminar</button>
-                                                </td>";
-                                            echo "</tr>";
+                                <table class="table my-0" id="eventTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID-Evento</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Fecha de registro</th>
+                                            <th scope="col">Lugar</th>
+                                            <th scope="col">Fecha y Hora</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // Mostrar los registros en la tabla
+                                        if ($lista_eventos->rowCount() > 0) {
+                                            while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
+                                                echo '<tr>';
+                                                echo '<td>' . $row['ID_Evento'] . '</td>';
+                                                echo '<td>' . $row['Nombre_Evento'] . '</td>';
+                                                echo '<td>' . $row['Descripcion_Evento'] . '</td>';
+                                                echo '<td>' . $row['Fecha_De_Registro'] . '</td>';
+                                                echo '<td>' . $row['Lugar'] . '</td>';
+                                                echo '<td>' . $row['Fecha_Y_Hora'] . '</td>';
+                                                echo '<td>
+                                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="' . $row['ID_Evento'] . '">Editar</button>
+                                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="' . $row['ID_Evento'] . '">Eliminar</button>
+                                                    </td>';
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='6'>No hay registros</td></tr>";
                                         }
-                                    } else {
-                                        echo "<tr><td colspan='6'>No hay registros</td></tr>";
-                                    }
-                                    // Cerrar la conexión
-                                    $conexion = null;
-                                    ?>
-                                </tbody>
-                            </table>
+                                        // Cerrar la conexión
+                                        $conexion = null;
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </section>
+                    <script>
+                        const busqueda = document.querySelector('#busqueda');
+                        const tabla = document.querySelector('#eventTable tbody');
+
+                        busqueda.addEventListener('keyup', () => {
+                            const textoBusqueda = busqueda.value.toLowerCase().trim();
+                            const filas = Array.from(tabla.querySelectorAll('tr'));
+
+                            filas.map((fila) => {
+                                const celdas = Array.from(fila.querySelectorAll('td'));
+                                const mostrarFila = celdas.filter((celda) => celda.textContent.toLowerCase().includes(textoBusqueda)).length > 0;
+
+                                if (mostrarFila) {
+                                    fila.classList.remove('d-none');
+                                } else {
+                                    fila.classList.add('d-none');
+                                }
+                            });
+                        });
+                    </script>
                     <section>
                     <!-- Modal de registro de evento -->
                         <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
