@@ -71,6 +71,9 @@ tbody + tbody {
     color: #fff;
     background: rgba(90, 92, 105, 0.5);
     line-height: 46px;
+    -webkit-transition: all .3s ease .5s;
+    -moz-transition: all .3s ease .5s;
+    -o-transition: all .3s ease .5s;
 }
 
 .scroll-to-top:focus,

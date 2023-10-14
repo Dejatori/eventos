@@ -32,7 +32,7 @@ volverIndex(); // Función para volver al index si ya se ha iniciado sesión
                             </div>
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-6 col-xl-4">
-                                    <div class="card mb-5">
+                                    <div class="card mb-5 mx-auto">
                                         <?php
                                         if (!empty($_SESSION['login_message'])) {
                                             $mensaje = mostrar_mensaje_login();
@@ -47,15 +47,30 @@ volverIndex(); // Función para volver al index si ya se ha iniciado sesión
                                             <form class="text-center" method="POST" id="login_user">
                                                 <div class="mb-3">
                                                     <label class="label" for="correo"></label>
-                                                    <input class="form-control form-control-lg" type="email" name="correo" id="correo" inputmode="email" placeholder="correo" minlength="4" required></div>
+                                                    <input class="form-control form-control-lg" type="email" name="correo" id="correo" inputmode="email" placeholder="correo" minlength="4" required>
+                                                </div>
                                                 <div class="mb-3">
                                                     <label class="label" for="clave"></label>
-                                                    <input class="form-control form-control-lg" type="password" name="clave" id="clave" placeholder="*********" minlength="8" required></div>
+                                                    <div class="input-group">
+                                                        <input class="form-control form-control-lg" type="password" name="clave" id="clave" placeholder="*********" minlength="8" required>
+                                                        <button class="btn btn-outline-secondary" type="button" id="ver_clave"><i class="fas fa-eye"></i></button>
+                                                    </div>
+                                                </div>
                                                 <div class="mb-3">
                                                     <button class="btn btn-primary d-block w-100" type="submit" name="login_user">Iniciar sesión</button>
-                                                    <p class="text-muted" style="margin: 10px;">¿Aún no tienes cuenta?</p><a href="registrarse.php">Registrarse</a>
+                                                    <p class="text-muted mt-3">¿Aún no tienes cuenta?</p><a href="registrarse.php">Registrarse</a>
                                                 </div>
                                             </form>
+                                            <script>
+                                                const verClaveBtn = document.querySelector('#ver_clave');
+                                                const claveInput = document.querySelector('#clave');
+
+                                                verClaveBtn.addEventListener('click', () => {
+                                                    const type = claveInput.type === 'password' ? 'text' : 'password';
+                                                    claveInput.type = type;
+                                                    verClaveBtn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash">';
+                                                });
+                                            </script>
                                         </div>
                                     </div>
                                 </div>

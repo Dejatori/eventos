@@ -8,56 +8,42 @@ require_once (SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de 
 $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
 
 // Función para conectar a la base de datos
-function obtenerConexion(): PDO
-{
+function obtenerConexion() {
+    // Instancia de conexión y autenticación
     $conexion = new Conexion();
-    $pdo = $conexion->conectar();
-    return $pdo;
+    $auth = new Auth($conexion);
+
+    return [$conexion, $auth];
 }
 
 // Logear usuario
-$errorLogin = false;
-if (isset($_POST['login_user'])) {
+if (isset($_POST["login_user"])) {
 
-    // Instancia de conexión y autenticación
-    $conexion = new Conexion();
-    $Auth = new Auth($conexion);
+    // Obtener las instancias de conexión y autenticación
+    list($conexion, $auth) = obtenerConexion();
+
+    // Obtener los valores del formulario
     $correo = $_POST['correo'];
     $clave = $_POST['clave'];
-    
-    if ($Auth->logear_usuario($correo, $clave)) {
-        $_SESSION['login_message'] = 3;
-    } else {
-        $_SESSION['login_message'] = 1;
-    }
-    $errorLogin = true;
-} else {
-    if ($errorLogin = true) {
-        $_SESSION['login_message'] = 2;
-    }
+
+    // Intentar logear al usuario
+    $login = $auth->logear_usuario($correo, $clave);
 }
 
 // Función para registrar un usuario
 if (isset($_POST["registrar_usuario"])) {
 
-    // Instancia de conexión y autenticación
-    $conexion = new Conexion();
-    $Auth = new Auth($conexion);
+    // Obtener las instancias de conexión y autenticación
+    list($conexion, $auth) = obtenerConexion();
+
+    // Obtener los valores del formulario
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
     $correo = $_POST["correo"];
     $clave = $_POST["clave"];
 
-    // Insertar el nuevo usuario en la base de datos
-    if ($Auth->registrar_usuario($nombre, $apellido, $correo, $clave)) {
-        // Mensaje de se ha registrado un usuario exitosamente
-        $_SESSION['register_message'] = 3;
-    } else {
-        // Mensaje de error al registrar un usuario
-        $_SESSION['register_message'] = 1;
-    } 
-    header("location: registrarse.php");
-    exit();
+    // Intentar insertar el nuevo usuario en la base de datos
+    $registro = $auth->registrar_usuario($nombre, $apellido, $correo, $clave);
 }
 
 // Función para cerrar la sesión
@@ -65,7 +51,7 @@ function cerrarSesion() : bool
 {
     session_unset();
     session_destroy();
-    return true ? true : false;
+    return true;
 }
 
 if (isset($_POST['cerrar_sesion'])) {
@@ -78,7 +64,7 @@ function verificarLogin(): bool
     return isset($_SESSION['usuario_id']); // Devuelve true si el usuario está logeado
 }
 
-function volverIndex()
+function volverIndex(): void
 {
     if (verificarLogin()) {
         header('location: inicio.php');
@@ -89,15 +75,15 @@ function volverIndex()
 // Función para obtener los datos de la sesión
 function datosUsuario(): array
 {
-    $id_usario = $_SESSION['usuario_id'];
+    $id_usuario = $_SESSION['usuario_id'];
     $nombre = $_SESSION['nombre'];
     $apellido = $_SESSION['apellido'];
     $correo = $_SESSION['correo'];
-    return array($id_usario, $nombre, $apellido, $correo);
+    return array($id_usuario, $nombre, $apellido, $correo);
 }
 
 if (isset($_SESSION['usuario_id'])) {
-    list($id_usario, $nombre, $apellido, $correo) = datosUsuario();
+    list($id_usuario, $nombre, $apellido, $correo) = datosUsuario();
 }
 
 /**
@@ -130,7 +116,7 @@ function moverYEliminarEvento(PDO $pdo, array $getData, string $ID_evento) : boo
 
     // Ejecutar la sentencia
     $sqlEliminarEvento->execute();
-    return $sqlEliminarEvento ? true : false;
+    return (bool)$sqlEliminarEvento;
 }
 
 // Función para actualizar un evento
@@ -155,7 +141,7 @@ function actualizarEvento(PDO $pdo, array $postData) : bool
 
     // Ejecutar la sentencia
     $sqlActualizarEvento->execute();
-    return $sqlActualizarEvento ? true : false;
+    return (bool)$sqlActualizarEvento;
 }
 
 // Función para agregar un evento
@@ -178,7 +164,7 @@ function agregarEvento(PDO $pdo, array $postData) : bool
 
     // Ejecutar la sentencia
     $sqlAgregarEvento->execute();
-    return $sqlAgregarEvento ? true : false;
+    return (bool)$sqlAgregarEvento;
 }
 
 ?>

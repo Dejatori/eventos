@@ -1,7 +1,7 @@
 <?php
 
 // Función para mostrar el mensaje de error o éxito al registrar un usuario
-function mostrar_mensaje_registro()
+function mostrar_mensaje_registro(): string
 {
     $messages = [
         1 => '<div class="alert alert-danger">
@@ -22,14 +22,14 @@ function mostrar_mensaje_registro()
 }
 
 // Función para mostrar el mensaje de error o éxito al iniciar sesión
-function mostrar_mensaje_login()
+function mostrar_mensaje_login(): string
 {
     $messages = [
         1 => '<div class="alert alert-danger">
-                <strong>El correo electrónico o la contraseña son incorrectos. Por favor, inténtalo de nuevo.</strong>
+                <strong>El correo electrónico no existe. Por favor, registrate o inténtalo de nuevo.</strong>
               </div>',
         2 => '<div class="alert alert-danger">
-                <p>Ha ocurrido un error al iniciar sesión. Por favor, inténtelo de nuevo.</p>
+                <p>La contraseña ingresada es incorrecta, Por favor, inténtelo de nuevo.</p>
               </div>',
         3 => '<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-label="loginModalLabel">
                 <div class="modal-dialog" role="document">
@@ -50,6 +50,9 @@ function mostrar_mensaje_login()
                     </div>
                 </div>
             </div>',
+            4 => '<div class="alert alert-danger">
+                    <p>Ha ocurrido un error al iniciar sesión. Por favor, inténtelo de nuevo.</p>
+                  </div>',
     ];
 
     if (isset($_SESSION['login_message']) && isset($messages[$_SESSION['login_message']])) {
@@ -59,7 +62,7 @@ function mostrar_mensaje_login()
 }
 
 // Función para mostrar el mensaje de error o éxito al cerrar sesión
-function mostrar_mensaje_logout()
+function mostrar_mensaje_logout(): string
 {
     $messages = [
         1 => '<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-label="logoutModalLabel">
@@ -107,7 +110,7 @@ function mostrar_mensaje_logout()
 }
 
 // Función para mostrar los mensajes al crear, actualizar o eliminar un evento
-function mostrar_mensaje_evento()
+function mostrar_mensaje_evento(): string
 {
     $messages = [
         1 => 'errorModal',

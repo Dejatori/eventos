@@ -8,7 +8,7 @@
             </div>
         </footer>
     </div>
-    <a class='border rounded d-inline scroll-to-top' href='#page-top'>
+    <a class='border rounded scroll-to-top' href='#page-top' style='visibility: hidden;'>
         <i class='fas fa-angle-up'></i>
     </a>
 </div>

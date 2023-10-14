@@ -41,9 +41,9 @@ class Auth
         $check_stmt = $this->verificar_correo($correo); // verificar_correo(): función de la clase Auth
 
         if ($check_stmt === true) {
-            // El correo ya existe, muestra un mensaje de error
-            mostrar_mensaje_registro($_SESSION['register_message'] = 2);
-            header('location: registrarse.php');
+            // El correo ya existe
+            $_SESSION['register_message'] = 2;
+            mostrar_mensaje_registro();
             return false;
         } else {
             // El correo no existe, se procede a registrar el usuario
@@ -65,10 +65,14 @@ class Auth
 
             // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
             if ($stmt->execute()) {
+                // Mensaje de éxito al registrar un usuario
                 $_SESSION['register_message'] = 3;
+                mostrar_mensaje_registro();
                 return true;
             } else {
+                // Mensaje de error al registrar un usuario (no se pudo ejecutar la consulta SQL)
                 $_SESSION['register_message'] = 1;
+                mostrar_mensaje_registro();
                 return false;
             }
         }
@@ -82,7 +86,6 @@ class Auth
         if ($stmt === false) {
             // El correo no existe
             $_SESSION['login_message'] = 1;
-            header('location: iniciar-sesion.php');
             return false;
         } else {
             // El correo existe, se procede a logear el usuario
@@ -92,13 +95,20 @@ class Auth
             $stmt->execute(); // Ejecutar la consulta SQL
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC); // fetch(): obtiene la siguiente fila de un conjunto de resultados (más información en https://www.php.net/manual/es/pdostatement.fetch.php)
             $clave_encriptada = $usuario['Clave']; // Obtener la contraseña encriptada del usuario
-            if (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con un hash (más información en https://www.php.net/manual/es/function.password-verify.php)
+            if (!password_verify($clave, $clave_encriptada)) {
+                $_SESSION['login_message'] = 2;
+                return false;
+            }
+            elseif (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con un hash (más información en https://www.php.net/manual/es/function.password-verify.php)
                 $_SESSION['usuario_id'] = $usuario['ID_Usuario']; // ID del usuario
                 $_SESSION['nombre'] = $usuario['Nombre']; // Nombre del usuario
                 $_SESSION['apellido'] = $usuario['Apellido']; // Apellido del usuario
                 $_SESSION['correo'] = $usuario['Correo']; // Correo del usuario
+                $_SESSION['login_message'] = 3;
+                header('location: inicio.php');
                 return true;
             } else {
+                $_SESSION['login_message'] = 4;
                 return false;
             }
         }
