@@ -167,4 +167,62 @@ function agregarEvento(PDO $pdo, array $postData) : bool
     return (bool)$sqlAgregarEvento;
 }
 
+// Función para generar el HTML de la tabla de eventos
+function generarTablaEventos($lista_eventos) {
+    ob_start(); // Iniciar almacenamiento en búfer de salida
+
+    if ($lista_eventos !== false && $lista_eventos->rowCount() > 0) {
+        while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
+            echo '<tr>';
+            echo '<td>' . $row['ID_Evento'] . '</td>';
+            echo '<td>' . $row['Nombre_Evento'] . '</td>';
+            echo '<td>' . $row['Descripcion_Evento'] . '</td>';
+            echo '<td>' . $row['Fecha_De_Registro'] . '</td>';
+            echo '<td>' . $row['Lugar'] . '</td>';
+            echo '<td>' . $row['Fecha_Y_Hora'] . '</td>';
+            echo '<td>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="' . $row['ID_Evento'] . '">Editar</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="' . $row['ID_Evento'] . '">Eliminar</button>
+                </td>';
+            echo '</tr>';
+        }
+    } else {
+        echo "<tr><td colspan='6'>No hay registros</td></tr>";
+    }
+
+    $tableHtml = ob_get_clean(); // Obtener el contenido del búfer y limpiarlo
+
+    return $tableHtml; // Devolver el HTML de la tabla
+}
+
+if (isset($_POST['ordenarEventos'])) {
+    $ordenarEventos = $_POST['ordenarEventos'];
+
+    // Crear una instancia de la clase Conexion
+    $conexion = new Conexion();
+    $pdo = $conexion->conectar();
+
+    // Consulta SQL para obtener los eventos ordenados según el criterio seleccionado
+    $sql = 'SELECT * FROM eventos';
+
+    $ordenamientos = [
+        'id-asc' => 'ID_Evento ASC',
+        'nombre-asc' => 'Nombre_Evento ASC',
+        'descripcion-asc' => 'Descripcion_Evento ASC',
+        'fecha-registro-desc' => 'Fecha_De_Registro DESC',
+        'lugar-asc' => 'Lugar ASC',
+        'fecha-hora-desc' => 'Fecha_Y_Hora DESC',
+    ];
+
+    // Verificar si el criterio seleccionado existe en el array de ordenamientos
+    $ordenamiento = $ordenamientos[$ordenarEventos] ?? 'ID_Evento ASC';
+    $sql .= ' ORDER BY ' . $ordenamiento;
+
+    // Ejecutar la consulta SQL
+    $lista_eventos = $pdo->query($sql);
+
+    // Generar el HTML de la tabla y mostrarlo
+    $tablaHTML = generarTablaEventos($lista_eventos);
+    echo $tablaHTML;
+}
 ?>

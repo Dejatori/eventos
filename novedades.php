@@ -71,34 +71,37 @@ try {
                     <section>
                         <div class="container">
                             <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
-                            <a type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#registerModal">Agregar evento</a>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6 text-nowrap">
+                                    <div class="col-md-6">
                                         <div id="eventTable_length" class="eventTables_length" aria-controls="eventTable">
-                                            <label class="form-label">Filtrar por
-                                                <select class="d-inline-block form-select form-select-sm" id="filtro">
-                                                    <option>Ordenar por</option>
-                                                    <option value="1">ID-Evento</option>
-                                                    <option value="2">Nombre</option>
-                                                    <option value="3">Descripción</option>
-                                                    <option value="4">Fecha de registro</option>
-                                                    <option value="5">Lugar</option>
-                                                    <option value="6">Fecha y Hora</option>
-                                                </select>&nbsp;
-                                            </label>
+                                            <select class="form-select form-select-sm ms-end" id="ordenar-eventos" name="ordenar-eventos"
+                                                    aria-label=".form-select-sm example" style="width: auto;">
+                                                <option>Ordenar por...</option>
+                                                <option value="id-asc">ID-Evento (Ascendente)</option>
+                                                <option value="nombre-asc">Nombre (Ascendente)</option>
+                                                <option value="descripcion-asc">Descripción (Ascendente)</option>
+                                                <option value="fecha-registro-desc">Fecha de Registro (Más reciente a más antigua)</option>
+                                                <option value="lugar-asc">Lugar (Ascendente)</option>
+                                                <option value="fecha-hora-desc">Fecha y Hora (Más reciente a más antigua)</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="text-md-end eventTables_filter" id="eventTable_filter">
-                                            <label class="form-label">
-                                                <input type="search" class="form-control form-control-sm" aria-controls="eventTable" placeholder="Buscar" id="busqueda">
-                                            </label>
+                                        <div class="d-flex justify-content-end align-items-baseline">
+                                            <div class="eventTables_filter me-3" id="eventTable_filter">
+                                                <label class="form-label">
+                                                    <input type="search" class="form-control form-control-sm" aria-controls="eventTable" placeholder="Buscar" id="busqueda">
+                                                </label>
+                                            </div>
+                                            <div class='eventTables_filter'>
+                                                <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#registerModal'>Agregar evento</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive table mt-2" id="eventTable" role="grid" aria-describedby="eventTable_info">
+                            <div class="table-responsive table mt-2 text-truncate" id="eventTable" role="grid" aria-describedby="eventTable_info">
                                 <table class="table my-0" id="eventTable">
                                     <thead>
                                         <tr>
@@ -114,28 +117,8 @@ try {
                                     <tbody>
                                         <?php
                                         // Mostrar los registros en la tabla
-                                        if (isset($lista_eventos)) {
-                                            if ($lista_eventos->rowCount() > 0) {
-                                                while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
-                                                    echo '<tr>';
-                                                    echo '<td>' . $row['ID_Evento'] . '</td>';
-                                                    echo '<td>' . $row['Nombre_Evento'] . '</td>';
-                                                    echo '<td>' . $row['Descripcion_Evento'] . '</td>';
-                                                    echo '<td>' . $row['Fecha_De_Registro'] . '</td>';
-                                                    echo '<td>' . $row['Lugar'] . '</td>';
-                                                    echo '<td>' . $row['Fecha_Y_Hora'] . '</td>';
-                                                    echo '<td>
-                                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="' . $row['ID_Evento'] . '">Editar</button>
-                                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="' . $row['ID_Evento'] . '">Eliminar</button>
-                                                        </td>';
-                                                    echo "</tr>";
-                                                }
-                                            } else {
-                                                echo "<tr><td colspan='6'>No hay registros</td></tr>";
-                                            }
-                                        }
-                                        // Cerrar la conexión
-                                        $conexion = null;
+                                        $tablaHTML = generarTablaEventos($lista_eventos);
+                                        echo $tablaHTML;
                                         ?>
                                     </tbody>
                                 </table>
@@ -159,6 +142,31 @@ try {
                                 } else {
                                     fila.classList.add('d-none');
                                 }
+                            });
+                        });
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const ordenarEventosSelect = document.querySelector('#ordenar-eventos');
+
+                            ordenarEventosSelect.addEventListener('change', function () {
+                                const selectedOption = ordenarEventosSelect.value;
+
+                                // Realizar una solicitud AJAX al servidor para ordenar los eventos
+                                fetch('servidor/funciones.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                    },
+                                    body: 'ordenarEventos=' + selectedOption,
+                                })
+                                    .then((response) => response.text())
+                                    .then((data) => {
+                                        // Actualizar el contenido de la tabla con los eventos ordenados
+                                        const eventTable = document.querySelector('#eventTable tbody');
+                                        eventTable.innerHTML = data;
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error al ordenar eventos:', error);
+                                    });
                             });
                         });
                     </script>
