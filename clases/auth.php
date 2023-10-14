@@ -21,24 +21,34 @@ class Auth
         $this->conexion = $conexion->conectar(); // conectar(): función de la clase Conexion
     }
 
+    // Función para verificar si el correo ya existe en la base de datos
+    public function verificar_correo($correo): bool // bool: retorna un valor booleano
+    {
+        $check_sql = 'SELECT ID_Usuario FROM usuarios WHERE Correo = :correo'; // Consulta SQL
+        $check_stmt = $this->conexion->prepare($check_sql); // Preparar la consulta SQL
+        $check_stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
+        $check_stmt->execute(); // Ejecutar la consulta SQL
+        if ($check_stmt->fetchColumn()) { // Si la consulta devuelve un valor, el correo ya existe
+            return true; // true: el correo ya existe
+        } else {
+            return false; // false: el correo no existe
+        }
+    }
+
     // Función para registrar un usuario
     public function registrar_usuario($nombre, $apellido, $correo, $clave): bool // bool: retorna un valor booleano
     {
-        $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // password_hash(): encripta la contraseña
+        $check_stmt = $this->verificar_correo($correo); // verificar_correo(): función de la clase Auth
 
-        // Verificar si el correo ya existe en la base de datos
-        $check_sql = 'SELECT ID_Usuario FROM usuarios WHERE Correo = :correo';
-        $check_stmt = $this->conexion->prepare($check_sql);
-        $check_stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
-        $check_stmt->execute();
-
-        if ($check_stmt->fetchColumn()) {
+        if ($check_stmt === true) {
             // El correo ya existe, muestra un mensaje de error
             mostrar_mensaje_registro($_SESSION['register_message'] = 2);
             header('location: registrarse.php');
-            exit();
+            return false;
         } else {
             // El correo no existe, se procede a registrar el usuario
+            $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // password_hash(): encripta la contraseña
+
             /** @noinspection SqlInsertValues */
             $sql = 'INSERT INTO usuarios (Nombre, Apellido, Correo, Clave) 
                 VALUES (:nombre, :apellido, :correo, :clave_encriptada)';
@@ -67,19 +77,40 @@ class Auth
     // Función para logear un usuario
     public function logear_usuario($correo, $clave): bool // bool: retorna un valor booleano
     {
-        $sql = 'SELECT * FROM usuarios WHERE Correo = :correo'; // Consulta SQL
+        $stmt = $this->verificar_correo($correo); // verificar_correo(): función de la clase Auth
+
+        if ($stmt === false) {
+            // El correo no existe
+            $_SESSION['login_message'] = 1;
+            header('location: iniciar-sesion.php');
+            return false;
+        } else {
+            // El correo existe, se procede a logear el usuario
+            $sql = 'SELECT * FROM usuarios WHERE Correo = :correo'; // Consulta SQL
+            $stmt = $this->conexion->prepare($sql); // Preparar la consulta SQL
+            $stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
+            $stmt->execute(); // Ejecutar la consulta SQL
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC); // fetch(): obtiene la siguiente fila de un conjunto de resultados (más información en https://www.php.net/manual/es/pdostatement.fetch.php)
+            $clave_encriptada = $usuario['Clave']; // Obtener la contraseña encriptada del usuario
+            if (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con un hash (más información en https://www.php.net/manual/es/function.password-verify.php)
+                $_SESSION['usuario_id'] = $usuario['ID_Usuario']; // ID del usuario
+                $_SESSION['nombre'] = $usuario['Nombre']; // Nombre del usuario
+                $_SESSION['apellido'] = $usuario['Apellido']; // Apellido del usuario
+                $_SESSION['correo'] = $usuario['Correo']; // Correo del usuario
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    // Función para eliminar un usuario
+    public function eliminar_usuario($correo): bool // bool: retorna un valor booleano
+    {
+        $sql = 'DELETE FROM usuarios WHERE Correo = :correo'; // Consulta SQL
         $stmt = $this->conexion->prepare($sql); // Preparar la consulta SQL
         $stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
-        $stmt->execute(); // Ejecutar la consulta SQL
-        $fila = $stmt->fetch(PDO::FETCH_ASSOC); // fetch(): obtiene una fila de un conjunto de resultados asociado al objeto PDOStatement
-        $clave_encriptada = $fila['Clave']; // Obtener la contraseña encriptada
-
-        // Verificar si la contraseña coincide con el hash proporcionado (clave_encriptada)
-        if (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con el hash proporcionado
-            $_SESSION['usuario_id'] = $fila['ID_Usuario']; // ID del usuario
-            $_SESSION['nombre'] = $fila['Nombre']; // Nombre del usuario
-            $_SESSION['apellido'] = $fila['Apellido']; // Apellido del usuario
-            $_SESSION['correo'] = $fila['Correo']; // Correo del usuario
+        if ($stmt->execute()) { // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
             return true;
         } else {
             return false;

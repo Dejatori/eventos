@@ -9,7 +9,7 @@ if (!empty($_SESSION['logout_message'])) {
 }
 
 // Redireccionar al error 403 si el usuario no está logeado
-if ($logeado == false && empty($_SESSION['logout_message'])) {
+if (!$logeado && empty($_SESSION['logout_message'])) {
     header('Location: 403.html');
 }
 
@@ -114,23 +114,25 @@ try {
                                     <tbody>
                                         <?php
                                         // Mostrar los registros en la tabla
-                                        if ($lista_eventos->rowCount() > 0) {
-                                            while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
-                                                echo '<tr>';
-                                                echo '<td>' . $row['ID_Evento'] . '</td>';
-                                                echo '<td>' . $row['Nombre_Evento'] . '</td>';
-                                                echo '<td>' . $row['Descripcion_Evento'] . '</td>';
-                                                echo '<td>' . $row['Fecha_De_Registro'] . '</td>';
-                                                echo '<td>' . $row['Lugar'] . '</td>';
-                                                echo '<td>' . $row['Fecha_Y_Hora'] . '</td>';
-                                                echo '<td>
-                                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="' . $row['ID_Evento'] . '">Editar</button>
-                                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="' . $row['ID_Evento'] . '">Eliminar</button>
-                                                    </td>';
-                                                echo "</tr>";
+                                        if (isset($lista_eventos)) {
+                                            if ($lista_eventos->rowCount() > 0) {
+                                                while ($row = $lista_eventos->fetch(PDO::FETCH_ASSOC)) {
+                                                    echo '<tr>';
+                                                    echo '<td>' . $row['ID_Evento'] . '</td>';
+                                                    echo '<td>' . $row['Nombre_Evento'] . '</td>';
+                                                    echo '<td>' . $row['Descripcion_Evento'] . '</td>';
+                                                    echo '<td>' . $row['Fecha_De_Registro'] . '</td>';
+                                                    echo '<td>' . $row['Lugar'] . '</td>';
+                                                    echo '<td>' . $row['Fecha_Y_Hora'] . '</td>';
+                                                    echo '<td>
+                                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="' . $row['ID_Evento'] . '">Editar</button>
+                                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="' . $row['ID_Evento'] . '">Eliminar</button>
+                                                        </td>';
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='6'>No hay registros</td></tr>";
                                             }
-                                        } else {
-                                            echo "<tr><td colspan='6'>No hay registros</td></tr>";
                                         }
                                         // Cerrar la conexión
                                         $conexion = null;

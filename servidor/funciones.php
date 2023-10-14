@@ -32,7 +32,7 @@ if (isset($_POST['login_user'])) {
     }
     $errorLogin = true;
 } else {
-    if ($errorLogin === true) {
+    if ($errorLogin = true) {
         $_SESSION['login_message'] = 2;
     }
 }
