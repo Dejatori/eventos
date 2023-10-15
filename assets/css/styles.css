@@ -3,7 +3,23 @@
 }
 
 html, body {
-    height: 100%;
+    width: 100%;
+    height: 100vh;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+main {
+    max-width: 95%;
+    margin: 0 auto;
 }
 
 #wrapper {
@@ -13,14 +29,13 @@ html, body {
 
 #wrapper #content-wrapper {
     background-color: #f8f9fc;
-    width: 100%;
     overflow-x: hidden;
 }
 
 #wrapper #content-wrapper #content {
+    padding: 2rem 0;
     flex: 1 0 auto;
 }
-
 
 .sticky-footer {
     padding: 2rem 0;
@@ -31,34 +46,30 @@ a:hover {
     text-decoration: underline;
 }
 
+.td-scroll {
+    max-width: 200px;
+    overflow-x: auto;
+    white-space: nowrap !important;
 
-th {
-    text-align: inherit;
-    text-align: -webkit-match-parent;
 }
 
-thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid var(--bs-gray-600);
+.td-scroll::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.75rem;
 }
 
-tbody + tbody {
-    border-top: 2px solid var(--bs-gray-600);
+.td-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
 
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    vertical-align: top;
-    border-color: inherit;
+.td-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0.5rem;
+    border: 2px solid #f1f1f1
 }
 
-.table > tbody {
-    vertical-align: inherit;
-}
-
-.table > thead {
-    vertical-align: bottom;
+.td-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .scroll-to-top {

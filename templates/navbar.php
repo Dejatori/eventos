@@ -1,6 +1,6 @@
 <div id="wrapper">
     <nav class="navbar navbar-expand bg-light navigation-clean navbar-light">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="inicio.php" style="font-family: 'Noto Serif Dogra', serif;font-size: 26px;font-weight: bold;">ADSO</a>
             <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"></button>
             <div class="collapse navbar-collapse" id="navcol-1">

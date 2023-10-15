@@ -30,6 +30,12 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 2. Fork el repositorio y crea una rama para tu contribución.
 3. Realiza tus cambios y envía una solicitud de extracción.
 
+## Testing
+
+Los tests fueron realizados con PHP version 8.2.4, Xdeug 3.2.2 y PHPUnit 9.6.13 en Windows 11 desde
+IntelliJ IDEA Ultimate, para que las pruebas funcionen correctamente se deben comentar las líneas de código
+referidas al principio de cada Test.
+
 ## Licencia del proyecto
 
 MIT License

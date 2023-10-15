@@ -1,7 +1,7 @@
 <?php
 require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
-volverIndex(); // Función para volver al index si ya se ha iniciado sesión
+redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
 
 ?>
 

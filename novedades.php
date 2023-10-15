@@ -23,7 +23,7 @@ try {
 
     // Mover el registro a la tabla eventos_eliminados y eliminarlo de la tabla eventos
     if (isset($_GET['eventID'])) {
-        $Eliminar = moverYeliminarEvento($pdo, $_GET, $_GET['eventID']);
+        $Eliminar = moverYEliminarEvento($pdo, $_GET, $_GET['eventID']);
 
         $_SESSION['event_message'] = ($Eliminar ? 4 : 1);
     }
@@ -69,7 +69,7 @@ try {
 <?php require_once 'templates/navbar.php'; ?>
                 <main>
                     <section>
-                        <div class="container">
+                        <div class="container-fluid" id="content">
                             <h1 class="mt-4 mb-4 text-uppercase" style="font-family: 'Noto Serif Dogra', serif;font-size: 40px;font-weight: bold;">Tabla de eventos</h1>
                             <div class="card-body">
                                 <div class="row">
@@ -101,7 +101,7 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive table mt-2 text-truncate" id="eventTable" role="grid" aria-describedby="eventTable_info">
+                            <div class="table-responsive table mt-2" id="eventTable" role="grid" aria-describedby="eventTable_info">
                                 <table class="table my-0" id="eventTable">
                                     <thead>
                                         <tr>

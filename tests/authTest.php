@@ -3,15 +3,16 @@ require_once '../clases/conexion.php';
 require_once '../clases/auth.php';
 
 /**
- * Este Test fue realizado con PHP version 8.2.4, Xdebug 3.2.2 y PHPUnit 9.6.13 en Windows 11
  * Para que las pruebas funcionen correctamente, se deben comentar las siguientes líneas del archivo 'auth.php'
- * línea 45: mostrar_mensaje_registro($_SESSION['register_message'] = 2);
- * línea 46: header('location: registrarse.php');
- * líne 85: header('location: iniciar-sesion.php');
-*
+ * Línea 46: mostrar_mensaje_registro();
+ * Línea 70: mostrar_mensaje_registro();
+ * Línea 75: mostrar_mensaje_registro();
+ * líne 108: header('location: inicio.php');
+*/
+
 /**
- * Esta clase extiende PHPUnit\Framework\TestCase y contiene las pruebas para la clase Auth_Testing.
- * */
+ * Esta clase extiende PHPUnit\Framework\TestCase y contiene las pruebas para la clase Auth.
+ */
 class authTest extends PHPUnit\Framework\TestCase
 {
     protected Auth $auth;
