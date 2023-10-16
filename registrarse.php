@@ -80,48 +80,6 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
                                                     <a href="iniciar-sesion.php">Iniciar sesión</a>
                                                 </div>
                                             </form>
-                                            <script>
-                                                const togglePasswordVisibility = (input, button) => {
-                                                    const type = input.type === 'password' ? 'text' : 'password';
-                                                    input.type = type;
-                                                    button.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash">';
-                                                };
-
-                                                const validatePassword = () => {
-                                                    const claveInput = document.querySelector('#clave');
-                                                    const confirmarClaveInput = document.querySelector('#confirmar_clave');
-                                                    const passwordError = document.querySelector('#password-error');
-                                                    const passwordWarning = document.querySelector('#password-warning');
-
-                                                    if (claveInput.value.length < 8) {
-                                                        passwordWarning.style.display = 'block';
-                                                        claveInput.classList.add('is-invalid');
-                                                    } else {
-                                                        claveInput.classList.remove('is-invalid');
-                                                        claveInput.classList.add('is-valid');
-                                                        passwordWarning.style.display = 'none';
-                                                        if (confirmarClaveInput.value !== claveInput.value) {
-                                                            passwordError.style.display = 'block';
-                                                            confirmarClaveInput.classList.add('is-invalid');
-                                                        } else {
-                                                            confirmarClaveInput.classList.remove('is-invalid');
-                                                            confirmarClaveInput.classList.add('is-valid');
-                                                            passwordError.style.display = 'none';
-                                                        }
-                                                    }
-                                                };
-
-                                                const verClaveBtn = document.querySelector('#ver_clave');
-                                                const verConfirmarClaveBtn = document.querySelector('#ver_confirmar_clave');
-
-                                                verClaveBtn.addEventListener('click', () => togglePasswordVisibility(document.querySelector('#clave'), verClaveBtn));
-
-                                                verConfirmarClaveBtn.addEventListener('click', () => togglePasswordVisibility(document.querySelector('#confirmar_clave'), verConfirmarClaveBtn));
-
-                                                document.querySelector('#clave').addEventListener('input', validatePassword);
-
-                                                document.querySelector('#confirmar_clave').addEventListener('input', validatePassword);
-                                            </script>
                                         </div>
                                     </div>
                                 </div>
@@ -134,6 +92,48 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
+<script>
+    const togglePasswordVisibility = (input, button) => {
+        const type = input.type === 'password' ? 'text' : 'password';
+        input.type = type;
+        button.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash">';
+    };
+
+    const validatePassword = () => {
+        const claveInput = document.querySelector('#clave');
+        const confirmarClaveInput = document.querySelector('#confirmar_clave');
+        const passwordError = document.querySelector('#password-error');
+        const passwordWarning = document.querySelector('#password-warning');
+
+        if (claveInput.value.length < 8) {
+            passwordWarning.style.display = 'block';
+            claveInput.classList.add('is-invalid');
+        } else {
+            claveInput.classList.remove('is-invalid');
+            claveInput.classList.add('is-valid');
+            passwordWarning.style.display = 'none';
+            if (confirmarClaveInput.value !== claveInput.value) {
+                passwordError.style.display = 'block';
+                confirmarClaveInput.classList.add('is-invalid');
+            } else {
+                confirmarClaveInput.classList.remove('is-invalid');
+                confirmarClaveInput.classList.add('is-valid');
+                passwordError.style.display = 'none';
+            }
+        }
+    };
+
+    const verClaveBtn = document.querySelector('#ver_clave');
+    const verConfirmarClaveBtn = document.querySelector('#ver_confirmar_clave');
+
+    verClaveBtn.addEventListener('click', () => togglePasswordVisibility(document.querySelector('#clave'), verClaveBtn));
+
+    verConfirmarClaveBtn.addEventListener('click', () => togglePasswordVisibility(document.querySelector('#confirmar_clave'), verConfirmarClaveBtn));
+
+    document.querySelector('#clave').addEventListener('input', validatePassword);
+
+    document.querySelector('#confirmar_clave').addEventListener('input', validatePassword);
+</script>
 <?php require_once "servidor/alerts.php"; ?>
 
 </body>

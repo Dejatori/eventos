@@ -4,7 +4,6 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
 
 ?>
-
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="es">
 
@@ -71,7 +70,7 @@ redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesi
                     </section>
                 </main>
 <?php require_once 'templates/footer.php'; ?>
-    
+
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>

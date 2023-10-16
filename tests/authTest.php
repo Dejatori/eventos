@@ -8,7 +8,7 @@ require_once '../clases/auth.php';
  * Línea 70: mostrar_mensaje_registro();
  * Línea 75: mostrar_mensaje_registro();
  * líne 108: header('location: inicio.php');
-*/
+ */
 
 /**
  * Esta clase extiende PHPUnit\Framework\TestCase y contiene las pruebas para la clase Auth.

@@ -5,12 +5,8 @@
 -- La tabla "eventos_eliminados" contiene información sobre eventos eliminados, incluyendo el nombre del evento, la descripción, la ubicación y la fecha y hora de eliminación.
 
 -- Creación de la base de datos y selección de la misma
-CREATE
-    DATABASE IF NOT EXISTS `eventos` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE
-    `eventos`;
-
--- Tabla de usuarios
+CREATE DATABASE IF NOT EXISTS `eventos` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `eventos`;
 CREATE TABLE usuarios
 (
     ID_Usuario        INT                                NOT NULL AUTO_INCREMENT,

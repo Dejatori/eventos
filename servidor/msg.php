@@ -50,7 +50,7 @@ function mostrar_mensaje_login(): string
                     </div>
                 </div>
             </div>',
-            4 => '<div class="alert alert-danger">
+        4 => '<div class="alert alert-danger">
                     <p>Ha ocurrido un error al iniciar sesión. Por favor, inténtelo de nuevo.</p>
                   </div>',
     ];

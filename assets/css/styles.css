@@ -91,15 +91,16 @@ a:hover {
 .scroll-to-top:hover {
     color: #fff;
 }
+
 .scroll-to-top:hover {
     background: #5a5c69;
 }
+
 .scroll-to-top i {
     font-weight: 800;
 }
 
 /* Iconos */
-
 
 .bs-icon {
     --bs-icon-size: .75rem;

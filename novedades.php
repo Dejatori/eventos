@@ -122,51 +122,6 @@ try {
                             </div>
                         </div>
                     </section>
-                    <script>
-                        const busqueda = document.querySelector('#busqueda');
-                        const tabla = document.querySelector('#eventTable tbody');
-
-                        busqueda.addEventListener('keyup', () => {
-                            const textoBusqueda = busqueda.value.toLowerCase().trim();
-                            const filas = Array.from(tabla.querySelectorAll('tr'));
-
-                            filas.map((fila) => {
-                                const celdas = Array.from(fila.querySelectorAll('td'));
-                                const mostrarFila = celdas.filter((celda) => celda.textContent.toLowerCase().includes(textoBusqueda)).length > 0;
-
-                                if (mostrarFila) {
-                                    fila.classList.remove('d-none');
-                                } else {
-                                    fila.classList.add('d-none');
-                                }
-                            });
-                        });
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const ordenarEventosSelect = document.querySelector('#ordenar-eventos');
-
-                            ordenarEventosSelect.addEventListener('change', function () {
-                                const selectedOption = ordenarEventosSelect.value;
-
-                                // Realizar una solicitud AJAX al servidor para ordenar los eventos
-                                fetch('servidor/funciones.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    body: 'ordenarEventos=' + selectedOption,
-                                })
-                                    .then((response) => response.text())
-                                    .then((data) => {
-                                        // Actualizar el contenido de la tabla con los eventos ordenados
-                                        const eventTable = document.querySelector('#eventTable tbody');
-                                        eventTable.innerHTML = data;
-                                    })
-                                    .catch((error) => {
-                                        console.error('Error al ordenar eventos:', error);
-                                    });
-                            });
-                        });
-                    </script>
                     <section>
                     <!-- Modal de registro de evento -->
                         <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
@@ -335,6 +290,51 @@ try {
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
+<script>
+    const busqueda = document.querySelector('#busqueda');
+    const tabla = document.querySelector('#eventTable tbody');
+
+    busqueda.addEventListener('keyup', () => {
+        const textoBusqueda = busqueda.value.toLowerCase().trim();
+        const filas = Array.from(tabla.querySelectorAll('tr'));
+
+        filas.map((fila) => {
+            const celdas = Array.from(fila.querySelectorAll('td'));
+            const mostrarFila = celdas.filter((celda) => celda.textContent.toLowerCase().includes(textoBusqueda)).length > 0;
+
+            if (mostrarFila) {
+                fila.classList.remove('d-none');
+            } else {
+                fila.classList.add('d-none');
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const ordenarEventosSelect = document.querySelector('#ordenar-eventos');
+
+        ordenarEventosSelect.addEventListener('change', function () {
+            const selectedOption = ordenarEventosSelect.value;
+
+            // Realizar una solicitud AJAX al servidor para ordenar los eventos
+            fetch('servidor/funciones.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'ordenarEventos=' + selectedOption,
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    // Actualizar el contenido de la tabla con los eventos ordenados
+                    const eventTable = document.querySelector('#eventTable tbody');
+                    eventTable.innerHTML = data;
+                })
+                .catch((error) => {
+                    console.error('Error al ordenar eventos:', error);
+                });
+        });
+    });
+</script>
 <?php require_once "servidor/alerts.php"; ?>
 
 </body>

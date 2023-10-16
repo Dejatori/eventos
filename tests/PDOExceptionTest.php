@@ -1,6 +1,7 @@
 <?php
 
-function logPDOException($e, $message): void {
+function logPDOException($e, $message): void
+{
     // Obtener la fecha y hora actual en la zona horaria deseada
     $currentDateTime = date('d-m-Y H:i:s', strtotime('now -7 hours'));
     // Crear el mensaje de registro
@@ -44,7 +45,6 @@ function divide($numerator, $denominator): float|int
     }
     return $numerator / $denominator;
 }
-
 
 class PDOExceptionTest extends PHPUnit\Framework\TestCase
 {

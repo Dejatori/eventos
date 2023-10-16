@@ -35,7 +35,6 @@ try {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="es">
 

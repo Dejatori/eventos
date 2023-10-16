@@ -98,8 +98,7 @@ class Auth
             if (!password_verify($clave, $clave_encriptada)) {
                 $_SESSION['login_message'] = 2;
                 return false;
-            }
-            elseif (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con un hash (más información en https://www.php.net/manual/es/function.password-verify.php)
+            } elseif (password_verify($clave, $clave_encriptada)) { // password_verify(): verifica que la contraseña coincida con un hash (más información en https://www.php.net/manual/es/function.password-verify.php)
                 $_SESSION['usuario_id'] = $usuario['ID_Usuario']; // ID del usuario
                 $_SESSION['nombre'] = $usuario['Nombre']; // Nombre del usuario
                 $_SESSION['apellido'] = $usuario['Apellido']; // Apellido del usuario

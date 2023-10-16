@@ -9,7 +9,7 @@ if (!empty($_SESSION['logout_message'])) {
     unset ($_SESSION['logout_message']);
 }
 
-if (!empty($_SESSION['login_message']) && $_SESSION['login_message'] === 3)  {
+if (!empty($_SESSION['login_message']) && $_SESSION['login_message'] === 3) {
     echo $mensaje = mostrar_mensaje_login();
     echo '<script>
             jQuery(document).ready(function () {

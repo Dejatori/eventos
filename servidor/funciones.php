@@ -1,9 +1,9 @@
 <?php
 (session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión de PHP si no está iniciada
 require_once 'dirs.php'; // Archivo que contiene las rutas de los directorios
-require_once (CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Conexion
-require_once (CLASS_PATH . 'auth.php'); // Archivo que contiene la clase Auth
-require_once (SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de alerta
+require_once(CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Conexion
+require_once(CLASS_PATH . 'auth.php'); // Archivo que contiene la clase Auth
+require_once(SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de alerta
 
 $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
 
@@ -21,21 +21,21 @@ function obtenerConexionYAuth(): array
 }
 
 // Función para logear al usuario
-function logearUsuario($correo, $clave) : bool
+function logearUsuario($correo, $clave): bool
 {
     list($conexion, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
     return $auth->logear_usuario($correo, $clave); // Llamar a la función logear_usuario de la clase Auth
 }
 
 // Función para registrar un usuario
-function registrarUsuario($nombre, $apellido, $correo, $clave) : bool
+function registrarUsuario($nombre, $apellido, $correo, $clave): bool
 {
     list($conexion, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
     return $auth->registrar_usuario($nombre, $apellido, $correo, $clave); // Llamar a la función registrar_usuario de la clase Auth
 }
 
 // Función para cerrar la sesión
-function cerrarSesion() : bool
+function cerrarSesion(): bool
 {
     session_unset(); // Eliminar todas las variables de sesión
     session_destroy(); // Destruir la sesión
@@ -184,7 +184,8 @@ function customSort($a, $b): int
 }
 
 // Función para obtener los eventos con ordenamiento personalizado
-function obtenerEventosConOrden($pdo, $ordenamiento) {
+function obtenerEventosConOrden($pdo, $ordenamiento)
+{
     // Validar que $ordenamiento sea una opción válida
     $ordenamientos = [
         'ID_Evento ASC',
@@ -288,7 +289,8 @@ if (isset($_POST['ordenarEventos'])) {
  * Función para registrar los PDOException en el archivo de log
  */
 
-function logPDOException($e, $message): void {
+function logPDOException($e, $message): void
+{
     // Obtener la fecha y hora actual en la zona horaria deseada
     $currentDateTime = date('d-m-Y H:i:s', strtotime('now -7 hours'));
     // Crear el mensaje de registro
