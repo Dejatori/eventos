@@ -3,6 +3,37 @@ require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
 
 redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
 
+if (isset($_POST['recuperar_contrasena'])) {
+    $correo = $_POST['correo'];
+    $usuario = obtener_usuario_por_correo($correo);
+
+    if ($usuario) {
+        $token = generar_token($usuario['id_usuario']);
+        enviar_correo_recuperacion($correo, $token);
+        $_SESSION['success_message'] = "Se ha enviado un correo electrónico con instrucciones para recuperar tu contraseña.";
+        redirigir('iniciar-sesion.php');
+    } else {
+        $_SESSION['error_message'] = "No se encontró ningún usuario con ese correo electrónico.";
+    }
+}
+
+try {
+    // Crear una instancia de la clase Conexion
+    $conexion = new Conexion();
+    $pdo = $conexion->conectar();
+
+    if (isset($_POST['recuperar_contrasena'])) {
+        $Recuperar = recuperarClave($pdo, $_POST['correo']);
+
+        $_SESSION['pwdrst_message'] = ($Recuperar ? 2 : 1);
+    }
+} catch (PDOException $e) {
+    logPDOException($e, 'Descripción de la excepción: ');
+    $_SESSION['pwdrst_message'] = 0;
+} finally {
+    $pdo = null;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +42,7 @@ redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesi
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Iniciar Sesión - ADSO</title>
+    <title>Recuperar Contraseña - ADSO</title>
     <meta name="description" content="Clase del 09 de Octubre del 2023">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel='stylesheet' href='assets/fonts/fontawesome-all.min.css'>
@@ -27,42 +58,40 @@ redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesi
                         <div class="container">
                             <div class="row mb-5">
                                 <div class="col-md-8 col-xl-6 text-center mx-auto">
-                                    <h2>Formulario de inicio de sesión</h2>
+                                    <h2>Recuperar Contraseña</h2>
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-6 col-xl-4">
                                     <div class="card mb-5 mx-auto">
                                         <?php
-                                        if (!empty($_SESSION['login_message'])) {
-                                            $mensaje = mostrar_mensaje_login();
+                                        if (!empty($_SESSION['error_message'])) {
+                                            $mensaje = mostrar_mensaje_error();
                                             echo $mensaje;
-                                            unset ($_SESSION['login_message']);
+                                            unset ($_SESSION['error_message']);
+                                        }
+                                        if (!empty($_SESSION['success_message'])) {
+                                            $mensaje = mostrar_mensaje_exito();
+                                            echo $mensaje;
+                                            unset ($_SESSION['success_message']);
                                         }
                                         ?><div class="card-body d-flex flex-column align-items-center">
                                             <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
-                                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"></path>
+                                                <svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' class='bi bi-envelope-arrow-down' viewBox='0 0 16 16'>
+                                                    <path d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4.5a.5.5 0 0 1-1 0V5.383l-7 4.2-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h5.5a.5.5 0 0 1 0 1H2a2 2 0 0 1-2-1.99V4Zm1 7.105 4.708-2.897L1 5.383v5.722ZM1 4v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1Z'/>
+                                                    <path d='M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-1.646a.5.5 0 0 1-.722-.016l-1.149-1.25a.5.5 0 1 1 .737-.676l.28.305V11a.5.5 0 0 1 1 0v1.793l.396-.397a.5.5 0 0 1 .708.708l-1.25 1.25Z'/>
                                                 </svg>
                                             </div>
-                                            <form method="POST" id="login_user">
+                                            <form method="POST" id="recuperar_contrasena">
                                                 <div class="mb-3">
                                                     <label class="label" for="correo">Ingresa tu correo</label>
                                                     <input class="form-control form-control-lg" type="email" name="correo" id="correo" inputmode="email" placeholder="example@gmail.com" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="label" for="clave">Ingresa tu contraseña</label>
-                                                    <div class="input-group">
-                                                        <input class="form-control form-control-lg" type="password" name="clave" id="clave" placeholder="********" minlength="8" required>
-                                                        <button class="btn btn-outline-secondary" type="button" id="ver_clave"><i class="fas fa-eye"></i></button>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <button class="btn btn-primary d-block w-100" type="submit" name="login_user">Iniciar sesión</button>
+                                                    <button class="btn btn-primary d-block w-100" type="submit" name="recuperar_contrasena">Recuperar Contraseña</button>
                                                 </div>
                                             </form>
-                                            <small>¿Aún no tienes cuenta? <a href='registrarse.php'>→ Registrarse</a></small>
-                                            <small>¿Olvidaste tu contraseña? <a href='recuperar-contrasena.php'>→ Recuperar contraseña</a></small>
+                                            <small>¿Ya tienes cuenta? <a href='iniciar-sesion.php'>→ Iniciar Sesión ←</a></small>
                                         </div>
                                     </div>
                                 </div>
@@ -75,16 +104,6 @@ redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesi
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
-<script>
-    const verClaveBtn = document.querySelector('#ver_clave');
-    const claveInput = document.querySelector('#clave');
-
-    verClaveBtn.addEventListener('click', () => {
-        const type = claveInput.type === 'password' ? 'text' : 'password';
-        claveInput.type = type;
-        verClaveBtn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash">';
-    });
-</script>
 <?php require_once "servidor/alerts.php"; ?>
 
 </body>

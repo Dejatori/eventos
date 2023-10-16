@@ -1,10 +1,29 @@
 # Personalización de mensajes de error
 ErrorDocument 404 /eventos/404.html
 ErrorDocument 403 /eventos/403.html
+ErrorDocument 500 /eventos/500.html
+
+# Guardar registro de errores en un archivo
+php_flag log_errors on
+php_value error_log /eventos/logs/error.log
+
+# Deshabilitar el registro de errores en el navegador
+php_flag display_errors off
+
 
 # Deshabilitar el listado de directorios
 Options -Indexes
-ErrorDocument 403 /eventos/403.html
 
 # Establecer inicio.php como página de indice por defecto
 DirectoryIndex inicio.php
+
+# Deshabilitar el acceso directo a los archivos
+RewriteEngine On
+
+# Redirigir a 404 los archivos que no deben ser accesibles
+RewriteCond %{REQUEST_URI} \.(iml|xml|meta|zip|sql|log|bat|gitattributtes|dist|yml|markdown|template|y|sh|gitignore|cache|md|json|lock|phar|yaml) [NC,OR]
+RewriteCond %{REQUEST_URI} -d
+RewriteRule .* - [R=404,L]
+
+# Redirigir archivos específicos a 404
+RewriteRule ^(license|LICENSE)$ - [R=404,L]

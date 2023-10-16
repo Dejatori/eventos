@@ -1,87 +1,92 @@
 <?php
 (session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión de PHP si no está iniciada
-require_once $_SERVER['DOCUMENT_ROOT'] . "/eventos/servidor/dirs.php";
-require_once (CLASS_PATH . 'conexion.php');
-require_once (CLASS_PATH . 'auth.php');
-require_once (SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de error y éxito
+require_once 'dirs.php'; // Archivo que contiene las rutas de los directorios
+require_once (CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Conexion
+require_once (CLASS_PATH . 'auth.php'); // Archivo que contiene la clase Auth
+require_once (SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de alerta
 
 $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
 
+/**
+ * Funciones de autenticación de usuarios
+ * Requieren la instancia de la clase Auth
+ */
+
 // Función para obtener la instancia de conexión y autenticación
-function obtenerConexionYAuth()
+function obtenerConexionYAuth(): array
 {
-    $conexion = new Conexion();
-    $auth = new Auth($conexion);
-    return [$conexion, $auth];
+    $conexion = new Conexion(); // Crear una instancia de la clase Conexion
+    $auth = new Auth($conexion); // Crear una instancia de la clase Auth
+    return [$conexion, $auth]; // Retornar un array con la instancia de conexión y autenticación
 }
 
 // Función para logear al usuario
-function logearUsuario($correo, $clave)
+function logearUsuario($correo, $clave) : bool
 {
-    list($conexion, $auth) = obtenerConexionYAuth();
-    return $auth->logear_usuario($correo, $clave);
+    list($conexion, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
+    return $auth->logear_usuario($correo, $clave); // Llamar a la función logear_usuario de la clase Auth
 }
 
 // Función para registrar un usuario
-function registrarUsuario($nombre, $apellido, $correo, $clave)
+function registrarUsuario($nombre, $apellido, $correo, $clave) : bool
 {
-    list($conexion, $auth) = obtenerConexionYAuth();
-    return $auth->registrar_usuario($nombre, $apellido, $correo, $clave);
+    list($conexion, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
+    return $auth->registrar_usuario($nombre, $apellido, $correo, $clave); // Llamar a la función registrar_usuario de la clase Auth
 }
 
 // Función para cerrar la sesión
 function cerrarSesion() : bool
 {
-    session_unset();
-    session_destroy();
+    session_unset(); // Eliminar todas las variables de sesión
+    session_destroy(); // Destruir la sesión
     return true;
 }
 
 // Función para verificar si el usuario está logeado
-function verificarLogin()
+function verificarLogin(): bool
 {
-    return isset($_SESSION['usuario_id']);
+    return isset($_SESSION['usuario_id']); // isset(): determina si una variable está definida y no es NULL
 }
 
 // Función para redirigir a la página de inicio si el usuario está logeado
-function redirigirSiLogeado()
+function redirigirSiLogeado(): void
 {
-    if (verificarLogin()) {
+    if (verificarLogin()) { // Si el usuario está logeado lo redirige a la página de inicio
         header('location: inicio.php');
-        exit();
+        exit(); // Terminar la ejecución del script
     }
 }
 
 // Función para obtener los datos de la sesión
-function obtenerDatosUsuario()
+function obtenerDatosUsuario(): array
 {
     $id_usuario = $_SESSION['usuario_id'];
     $nombre = $_SESSION['nombre'];
     $apellido = $_SESSION['apellido'];
     $correo = $_SESSION['correo'];
-    return [$id_usuario, $nombre, $apellido, $correo];
+    return [$id_usuario, $nombre, $apellido, $correo]; // Retornar un array con los datos de la sesión
 }
 
-if (isset($_POST['login_user'])) {
+if (isset($_POST['login_user'])) { // Si se ha enviado el formulario de inicio de sesión
     $correo = $_POST['correo'];
     $clave = $_POST['clave'];
-    $login = logearUsuario($correo, $clave);
+    $login = logearUsuario($correo, $clave); // Llamar a la función logearUsuario con los parámetros del formulario
 }
 
-if (isset($_POST['registrar_usuario'])) {
+if (isset($_POST['registrar_usuario'])) { // Si se ha enviado el formulario de registro
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
     $correo = $_POST['correo'];
     $clave = $_POST['clave'];
-    $registro = registrarUsuario($nombre, $apellido, $correo, $clave);
+    $registro = registrarUsuario($nombre, $apellido, $correo, $clave); // Llamar a la función registrarUsuario con los parámetros del formulario
 }
 
 if (isset($_POST['cerrar_sesion'])) {
-    $_SESSION['logout_message'] = cerrarSesion() ? 1 : 2;
+    $_SESSION['logout_message'] = cerrarSesion() ? 1 : 2; // Llamar a la función cerrarSesion y guardar la alerta en la sesión
 }
 
 if (verificarLogin()) {
-    list($id_usuario, $nombre, $apellido, $correo) = obtenerDatosUsuario();
+    list($id_usuario, $nombre, $apellido, $correo) = obtenerDatosUsuario(); // Obtener los datos de la sesión y guardarlos en variables
 }
 
 /**
@@ -121,7 +126,7 @@ function moverYEliminarEvento(PDO $pdo, array $getData, string $eventID): bool
         // Confirmar la transacción
         $pdo->commit();
         return true;
-    } catch (Exception $e) {
+    } catch (Exception) {
         // En caso de error, deshacer la transacción
         $pdo->rollBack();
         return false;
@@ -168,7 +173,8 @@ function agregarEvento(PDO $pdo, array $postData): bool
  */
 
 // Función de comparación para ordenar alfabéticamente, considerando números en cualquier posición
-function customSort($a, $b) {
+function customSort($a, $b): int
+{
     // Comparar sin distinguir mayúsculas y minúsculas
     $a = strtolower($a);
     $b = strtolower($b);
@@ -221,7 +227,8 @@ function obtenerEventosConOrden($pdo, $ordenamiento) {
 }
 
 // Función para generar el HTML de la tabla de eventos
-function generarTablaEventos($lista_eventos) {
+function generarTablaEventos($lista_eventos): false|string
+{
     ob_start(); // Iniciar almacenamiento en búfer de salida
 
     if (!empty($lista_eventos)) {
@@ -243,9 +250,8 @@ function generarTablaEventos($lista_eventos) {
         echo "<tr><td colspan='6'>No hay registros</td></tr>";
     }
 
-    $tableHtml = ob_get_clean(); // Obtener el contenido del búfer y limpiarlo
-
-    return $tableHtml; // Devolver el HTML de la tabla
+    // Obtener el contenido del búfer y limpiarlo
+    return ob_get_clean(); // Devolver el HTML de la tabla
 }
 
 // Procesar solicitud AJAX para ordenar eventos
@@ -267,11 +273,7 @@ if (isset($_POST['ordenarEventos'])) {
     ];
 
     // Verificar si el criterio seleccionado existe en el array de ordenamientos
-    if (isset($ordenamientos[$ordenarEventos])) {
-        $ordenamiento = $ordenamientos[$ordenarEventos];
-    } else {
-        $ordenamiento = 'ID_Evento ASC'; // Ordenamiento predeterminado en caso de valor no válido
-    }
+    $ordenamiento = $ordenamientos[$ordenarEventos] ?? 'ID_Evento ASC';
 
     // Obtener los eventos con ordenamiento personalizado
     $eventos = obtenerEventosConOrden($pdo, $ordenamiento);
@@ -281,4 +283,16 @@ if (isset($_POST['ordenarEventos'])) {
     echo $tablaHTML;
     exit(); // Terminar la ejecución después de la respuesta AJAX
 }
-?>
+
+/**
+ * Función para registrar los PDOException en el archivo de log
+ */
+
+function logPDOException($e, $message): void {
+    // Obtener la fecha y hora actual en la zona horaria deseada
+    $currentDateTime = date('d-m-Y H:i:s', strtotime('now -7 hours'));
+    // Crear el mensaje de registro
+    $logMessage = "[$currentDateTime] $message " . $e->getMessage() . PHP_EOL . $e . PHP_EOL;
+    // Registrar el mensaje en el archivo de log
+    error_log($logMessage, 3, 'logs/error.log');
+}

@@ -24,29 +24,26 @@ try {
     // Mover el registro a la tabla eventos_eliminados y eliminarlo de la tabla eventos
     if (isset($_GET['eventID'])) {
         $Eliminar = moverYEliminarEvento($pdo, $_GET, $_GET['eventID']);
-
         $_SESSION['event_message'] = ($Eliminar ? 4 : 1);
     }
 
     // Actualizar el registro en la tabla eventos
     if (isset($_POST['actualizar_evento'])) {
         $Actualizar = actualizarEvento($pdo, $_POST);
-
         $_SESSION['event_message'] = ($Actualizar ? 3 : 1);
     }
 
     // Agregar un registro a la tabla eventos
     if (isset($_POST["agregar_evento"])) {
         $Agregar = agregarEvento($pdo, $_POST);
-
         $_SESSION['event_message'] = ($Agregar ? 2 : 1);
     }
 } catch (PDOException $e) {
-    // Mostrar mensaje de error con un echo
-    echo $e->getMessage();
+    // Guardar mensaje de error en el archivo de logs
+    logPDOException($e, 'Descripción de la excepción: ');
 } finally {
     // Cerrar la conexión
-    $conexion = null;
+    $pdo = null;
 }
 ?>
 <!DOCTYPE html>
