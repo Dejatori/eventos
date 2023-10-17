@@ -22,17 +22,12 @@ class Auth
     }
 
     // Función para verificar si el correo ya existe en la base de datos
-    public function verificar_correo($correo): bool // bool: retorna un valor booleano
+    public function verificar_correo(string $correo): bool // bool: retorna un valor booleano
     {
-        $check_sql = 'SELECT ID_Usuario FROM usuarios WHERE Correo = :correo'; // Consulta SQL
-        $check_stmt = $this->conexion->prepare($check_sql); // Preparar la consulta SQL
-        $check_stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
-        $check_stmt->execute(); // Ejecutar la consulta SQL
-        if ($check_stmt->fetchColumn()) { // Si la consulta devuelve un valor, el correo ya existe
-            return true; // true: el correo ya existe
-        } else {
-            return false; // false: el correo no existe
-        }
+        $sqlVerificarCorreo = $this->conexion->prepare('SELECT ID_Usuario, Nombre, Apellido, Correo, Clave, Cod_Usuario FROM usuarios WHERE Correo = :correo');
+        $sqlVerificarCorreo->bindParam(':correo', $correo, PDO::PARAM_STR);
+        $sqlVerificarCorreo->execute();
+        return $sqlVerificarCorreo->fetch() !== false;
     }
 
     // Función para registrar un usuario
@@ -43,19 +38,15 @@ class Auth
         if ($check_stmt === true) {
             // El correo ya existe
             $_SESSION['register_message'] = 2;
-            mostrar_mensaje_registro();
+            //mostrar_mensaje_registro();
             return false;
         } else {
             // El correo no existe, se procede a registrar el usuario
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // password_hash(): encripta la contraseña
 
             /** @noinspection SqlInsertValues */
-            $sql = 'INSERT INTO usuarios (Nombre, Apellido, Correo, Clave) 
-                VALUES (:nombre, :apellido, :correo, :clave_encriptada)';
-
             // Preparar la consulta SQL
-            $stmt = $this->conexion->prepare($sql);
-
+            $stmt = $this->conexion->prepare('INSERT INTO usuarios (Nombre, Apellido, Correo, Clave) VALUES (:nombre, :apellido, :correo, :clave_encriptada)');
             // Vincular parámetros
             // bindParam: vincula un parámetro con una variable de la clase PDOStatement (más información en https://www.php.net/manual/es/pdostatement.bindparam.php)
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
@@ -67,12 +58,12 @@ class Auth
             if ($stmt->execute()) {
                 // Mensaje de éxito al registrar un usuario
                 $_SESSION['register_message'] = 3;
-                mostrar_mensaje_registro();
+                //mostrar_mensaje_registro();
                 return true;
             } else {
                 // Mensaje de error al registrar un usuario (no se pudo ejecutar la consulta SQL)
                 $_SESSION['register_message'] = 1;
-                mostrar_mensaje_registro();
+                //mostrar_mensaje_registro();
                 return false;
             }
         }
@@ -89,8 +80,7 @@ class Auth
             return false;
         } else {
             // El correo existe, se procede a logear el usuario
-            $sql = 'SELECT * FROM usuarios WHERE Correo = :correo'; // Consulta SQL
-            $stmt = $this->conexion->prepare($sql); // Preparar la consulta SQL
+            $stmt = $this->conexion->prepare('SELECT * FROM usuarios WHERE Correo = :correo'); // Preparar la consulta SQL
             $stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
             $stmt->execute(); // Ejecutar la consulta SQL
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC); // fetch(): obtiene la siguiente fila de un conjunto de resultados (más información en https://www.php.net/manual/es/pdostatement.fetch.php)
@@ -104,7 +94,7 @@ class Auth
                 $_SESSION['apellido'] = $usuario['Apellido']; // Apellido del usuario
                 $_SESSION['correo'] = $usuario['Correo']; // Correo del usuario
                 $_SESSION['login_message'] = 3;
-                header('location: inicio.php');
+                //header('location: inicio.php');
                 return true;
             } else {
                 $_SESSION['login_message'] = 4;
@@ -116,8 +106,7 @@ class Auth
     // Función para eliminar un usuario
     public function eliminar_usuario($correo): bool // bool: retorna un valor booleano
     {
-        $sql = 'DELETE FROM usuarios WHERE Correo = :correo'; // Consulta SQL
-        $stmt = $this->conexion->prepare($sql); // Preparar la consulta SQL
+        $stmt = $this->conexion->prepare('DELETE FROM usuarios WHERE Correo = :correo'); // Preparar la consulta SQL
         $stmt->bindParam(':correo', $correo, PDO::PARAM_STR); // Vincular parámetros
         if ($stmt->execute()) { // Si la consulta se ejecuta correctamente se retorna true, de lo contrario false
             return true;

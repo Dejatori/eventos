@@ -1,5 +1,6 @@
 <?php
 require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+require_once 'servidor/eventos.php'; // Archivo que contiene las funciones para los eventos
 
 $logeado = verificarLogin();
 
@@ -11,39 +12,6 @@ if (!empty($_SESSION['logout_message'])) {
 // Redireccionar al error 403 si el usuario no está logeado
 if (!$logeado && empty($_SESSION['logout_message'])) {
     header('Location: 403.html');
-}
-
-try {
-    // Crear una instancia de la clase Conexion
-    $conexion = new Conexion();
-    $pdo = $conexion->conectar();
-    
-    // Obtener los registros de la tabla eventos
-    $lista_eventos = $pdo->query("SELECT * FROM eventos");
-
-    // Mover el registro a la tabla eventos_eliminados y eliminarlo de la tabla eventos
-    if (isset($_GET['eventID'])) {
-        $Eliminar = moverYEliminarEvento($pdo, $_GET, $_GET['eventID']);
-        $_SESSION['event_message'] = ($Eliminar ? 4 : 1);
-    }
-
-    // Actualizar el registro en la tabla eventos
-    if (isset($_POST['actualizar_evento'])) {
-        $Actualizar = actualizarEvento($pdo, $_POST);
-        $_SESSION['event_message'] = ($Actualizar ? 3 : 1);
-    }
-
-    // Agregar un registro a la tabla eventos
-    if (isset($_POST["agregar_evento"])) {
-        $Agregar = agregarEvento($pdo, $_POST);
-        $_SESSION['event_message'] = ($Agregar ? 2 : 1);
-    }
-} catch (PDOException $e) {
-    // Guardar mensaje de error en el archivo de logs
-    logPDOException($e, 'Descripción de la excepción: ');
-} finally {
-    // Cerrar la conexión
-    $pdo = null;
 }
 ?>
 <!DOCTYPE html>
@@ -316,7 +284,7 @@ try {
             const selectedOption = ordenarEventosSelect.value;
 
             // Realizar una solicitud AJAX al servidor para ordenar los eventos
-            fetch('servidor/funciones.php', {
+            fetch('servidor/eventos.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

@@ -54,13 +54,13 @@ class PDOExceptionTest extends PHPUnit\Framework\TestCase
         errorLog();
 
         // Verifica si el archivo error.log se ha creado
-        $this->assertFileExists('../logs/testError.log');
+        $this->assertFileExists('../logs/errorTest.log');
 
         // Verifica si el mensaje de error se encuentra en el archivo de registro
-        $logContent = file_get_contents('../logs/testError.log');
+        $logContent = file_get_contents('../logs/errorTest.log');
 
         // Verifica si el contenido del archivo contiene el mensaje de error esperado
-        $this->assertStringContainsString('Este es un mensaje de error de prueba.', $logContent);
+        $this->assertStringContainsString('Descripción de la excepción: ', $logContent);
     }
 
     public function testDivisionByZeroError()

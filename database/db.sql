@@ -70,3 +70,20 @@ CREATE TABLE eventos_eliminados
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
+
+-- Tabla de restablecer contraseña
+CREATE TABLE restablecer_contrasena
+(
+    ID                 INT                                NOT NULL AUTO_INCREMENT,
+    Correo             VARCHAR(150)                       NOT NULL,
+    Token              CHAR(60)                           NOT NULL,
+    Fecha_De_Solicitud DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (ID),
+    INDEX idx_restablecer_contrasena_token (Token),
+    CONSTRAINT fk_restablecer_contrasena_usuarios
+        FOREIGN KEY (Correo) REFERENCES usuarios (Correo)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;

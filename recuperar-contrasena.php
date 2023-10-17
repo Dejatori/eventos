@@ -1,39 +1,8 @@
 <?php
-require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+require_once 'servidor/funciones.php'; // En el próximo commit la idea es solo usar el archivo de 'servidor/recupera-contrasena.php'
+require_once 'servidor/recuperar-contrasena.php'; // Archivo que contiene las funciones para recuperar la contraseña
 
 redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
-
-if (isset($_POST['recuperar_contrasena'])) {
-    $correo = $_POST['correo'];
-    $usuario = obtener_usuario_por_correo($correo);
-
-    if ($usuario) {
-        $token = generar_token($usuario['id_usuario']);
-        enviar_correo_recuperacion($correo, $token);
-        $_SESSION['success_message'] = "Se ha enviado un correo electrónico con instrucciones para recuperar tu contraseña.";
-        redirigir('iniciar-sesion.php');
-    } else {
-        $_SESSION['error_message'] = "No se encontró ningún usuario con ese correo electrónico.";
-    }
-}
-
-try {
-    // Crear una instancia de la clase Conexion
-    $conexion = new Conexion();
-    $pdo = $conexion->conectar();
-
-    if (isset($_POST['recuperar_contrasena'])) {
-        $Recuperar = recuperarClave($pdo, $_POST['correo']);
-
-        $_SESSION['pwdrst_message'] = ($Recuperar ? 2 : 1);
-    }
-} catch (PDOException $e) {
-    logPDOException($e, 'Descripción de la excepción: ');
-    $_SESSION['pwdrst_message'] = 0;
-} finally {
-    $pdo = null;
-}
-
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="es">
@@ -64,15 +33,10 @@ try {
                                 <div class="col-md-6 col-xl-4">
                                     <div class="card mb-5 mx-auto">
                                         <?php
-                                        if (!empty($_SESSION['error_message'])) {
-                                            $mensaje = mostrar_mensaje_error();
-                                            echo $mensaje;
-                                            unset ($_SESSION['error_message']);
-                                        }
-                                        if (!empty($_SESSION['success_message'])) {
-                                            $mensaje = mostrar_mensaje_exito();
-                                            echo $mensaje;
-                                            unset ($_SESSION['success_message']);
+                                        echo "\n";
+                                        if (!empty($_SESSION['pswdrst'])) {
+                                            echo $_SESSION['pswdrst'];
+                                            unset($_SESSION['pswdrst']);
                                         }
                                         ?><div class="card-body d-flex flex-column align-items-center">
                                             <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">

@@ -109,6 +109,30 @@ function mostrar_mensaje_logout(): string
     return '';
 }
 
+// Función para mostrar los mensajes al recuperar la contraseña
+function mostrar_mensaje_recuperar_contrasena(): string
+{
+    $messages = [
+        'exito' => '<div class="alert alert-success">
+                        <strong>Correo enviado</strong> Se ha enviado un correo electrónico. Siga las instrucciones para restablecer la contraseña.
+                    </div>',
+        'no_enviado' => '<div class="alert alert-danger">
+                            <strong>Correo no enviado</strong> No se ha podido enviar el correo electrónico.
+                        </div>',
+        'correo_duplicado' => '<div class="alert alert-danger">
+                                <strong>Correo no enviado</strong> El correo electrónico ya ha solicitado restablecer la contraseña.
+                            </div>',
+        'correo_no_encontrado' => '<div class="alert alert-danger">
+                                    <strong>Correo no encontrado</strong> El correo electrónico no se encuentra registrado.
+                                </div>',
+    ];
+
+    if (isset($_SESSION['pswdrst']) && isset($messages[$_SESSION['pswdrst']])) {
+        return $messages[$_SESSION['pswdrst']];
+    }
+    return ''; // En caso de que no haya mensaje
+}
+
 // Función para mostrar los mensajes al crear, actualizar o eliminar un evento
 function mostrar_mensaje_evento(): string
 {
