@@ -46,6 +46,9 @@ a:hover {
     text-decoration: underline;
 }
 
+
+ /* Scroll de la tabla */
+ 
 .td-scroll {
     max-width: 200px;
     overflow-x: auto;

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Este archivo contiene código para mostrar mensajes de alerta en la aplicación.
+ * 
+ * La función mostrar_mensaje_logout() muestra un mensaje de alerta cuando el usuario cierra sesión.
+ * La función mostrar_mensaje_login() muestra un mensaje de alerta cuando el usuario inicia sesión.
+ * La variable $mensajeEvento contiene el código para mostrar un mensaje de alerta cuando se crea un evento.
+ * 
+ * Si el usuario está en la página novedades.php, se muestra el script $scriptEvento que contiene código para actualizar los modales de confirmación y edición de eventos.
+ * 
+ */
 if (!empty($_SESSION['logout_message'])) {
     echo $mensaje = mostrar_mensaje_logout();
     echo '<script>
