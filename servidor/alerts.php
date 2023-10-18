@@ -67,3 +67,5 @@ $scriptEvento = "
 if (str_contains($_SERVER['REQUEST_URI'], 'novedades.php')) {
     echo $scriptEvento;
 }
+
+?>

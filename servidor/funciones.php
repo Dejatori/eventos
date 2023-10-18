@@ -1,9 +1,10 @@
 <?php /** @noinspection PhpUnusedLocalVariableInspection */
 /** @noinspection PhpRedundantOptionalArgumentInspection */
 (session_status() === PHP_SESSION_NONE ? session_start() : ''); // Iniciar la sesión de PHP si no está iniciada
-require_once 'dirs.php'; // Archivo que contiene las rutas de los directorios
+require 'dirs.php'; // Archivo que contiene las rutas de los directorios
 require_once(CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Conexion
 require_once(CLASS_PATH . 'auth.php'); // Archivo que contiene la clase Auth
+require_once(SERVER_PATH . 'helpers.php'); // Archivo que contiene funciones auxiliares
 require_once(SERVER_PATH . 'msg.php'); // Archivo que contiene los mensajes de alerta
 
 $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
@@ -13,19 +14,10 @@ $url = $_SERVER['REQUEST_URI']; // Obtener la URL actual
  * Requieren la instancia de la clase Auth
  */
 
-// Función para obtener la instancia de conexión y autenticación
-function obtenerConexionYAuth(): array
-{
-    $conexion = new Conexion(); // Crear una instancia de la clase Conexion
-    $pdo = $conexion->conectar(); // Obtener la instancia de conexión
-    $auth = new Auth($conexion); // Crear una instancia de la clase Auth
-    return [$pdo, $auth]; // Retornar un array con la instancia de conexión y autenticación
-}
-
 // Función para logear al usuario
 function logearUsuario($correo, $clave): bool
 {
-    list($pdo, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
+    $auth = obtenerAuth(); // Obtener la instancia de la clase Auth
     return $auth->logear_usuario($correo, $clave); // Llamar a la función logear_usuario de la clase Auth
 }
 
@@ -38,7 +30,7 @@ if (isset($_POST['login_user'])) { // Si se ha enviado el formulario de inicio d
 // Función para registrar un usuario
 function registrarUsuario($nombre, $apellido, $correo, $clave): bool
 {
-    list($pdo, $auth) = obtenerConexionYAuth(); // Obtener la instancia de conexión y autenticación
+    $auth = obtenerAuth(); // Obtener la instancia de la clase Auth
     return $auth->registrar_usuario($nombre, $apellido, $correo, $clave); // Llamar a la función registrar_usuario de la clase Auth
 }
 
@@ -92,28 +84,4 @@ function obtenerDatosUsuario(): array
     $apellido = $_SESSION['apellido'];
     $correo = $_SESSION['correo'];
     return [$id_usuario, $nombre, $apellido, $correo]; // Retornar un array con los datos de la sesión
-}
-
-/**
- * Función para registrar las Excepciones en el archivo de log
- */
-
-function logPDOException($e, $message): void
-{
-    // Obtener la fecha y hora actual en la zona horaria deseada
-    $currentDateTime = date('d-m-Y H:i:s', strtotime('now -7 hours'));
-    // Crear el mensaje de registro
-    $logMessage = "[$currentDateTime] $message " . $e->getMessage() . PHP_EOL . $e . PHP_EOL;
-    // Registrar el mensaje en el archivo de log
-    error_log($logMessage, 3, 'logs/error.log');
-}
-
-function logException($e, $message): void
-{
-    // Obtener la fecha y hora actual en la zona horaria deseada
-    $currentDateTime = date('d-m-Y H:i:s', strtotime('now -7 hours'));
-    // Crear el mensaje de registro
-    $logMessage = "[$currentDateTime] $message " . $e->getMessage() . PHP_EOL . $e . PHP_EOL;
-    // Registrar el mensaje en el archivo de log
-    error_log($logMessage, 3, 'logs/error.log');
 }

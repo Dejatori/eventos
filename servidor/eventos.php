@@ -1,6 +1,5 @@
 <?php
-require_once 'dirs.php'; // Archivo que contiene las rutas de los directorios
-require_once(CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Conexion
+require_once 'helpers.php'; // Archivo que contiene los mensajes de alerta
 
 /**
  * Funciones de la tabla eventos
@@ -8,8 +7,7 @@ require_once(CLASS_PATH . 'conexion.php'); // Archivo que contiene la clase Cone
 
 try {
     // Crear una instancia de la clase Conexion
-    $conexion = new Conexion();
-    $pdo = $conexion->conectar();
+    $pdo = obtenerConexion();
 
     // Obtener los registros de la tabla eventos
     $lista_eventos = $pdo->query('SELECT * FROM eventos');
@@ -206,8 +204,7 @@ if (isset($_POST['ordenarEventos'])) {
     $ordenarEventos = $_POST['ordenarEventos'];
 
     // Crear una instancia de la clase Conexion
-    $conexion = new Conexion();
-    $pdo = $conexion->conectar();
+    $pdo = obtenerConexion();
 
     // Array de ordenamientos personalizados
     $ordenamientos = [

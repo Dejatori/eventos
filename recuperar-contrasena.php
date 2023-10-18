@@ -1,6 +1,6 @@
 <?php
-require_once 'servidor/funciones.php'; // En el próximo commit la idea es solo usar el archivo de 'servidor/recupera-contrasena.php'
-require_once 'servidor/recuperar-contrasena.php'; // Archivo que contiene las funciones para recuperar la contraseña
+require_once 'servidor/funciones.php'; // Archivo con las funciones del usuario
+require_once 'servidor/recuperar-contrasena.php'; // Archivo con las funciones para restablecer la contraseña
 
 redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
 ?>
@@ -67,7 +67,6 @@ redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesi
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/theme.js"></script>
-<?php require_once "servidor/alerts.php"; ?>
 
 </body>
 

@@ -1,5 +1,5 @@
 <?php
-require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones del usuario
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="es">

@@ -1,5 +1,5 @@
 <?php
-require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones del usuario
 require_once 'servidor/eventos.php'; // Archivo que contiene las funciones para los eventos
 
 $logeado = verificarLogin();

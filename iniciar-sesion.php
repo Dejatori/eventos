@@ -1,5 +1,5 @@
 <?php
-require_once 'servidor/funciones.php'; // Archivo que contiene las funciones
+require_once 'servidor/funciones.php'; // Archivo que contiene las funciones del usuario
 
 redirigirSiLogeado(); // Función para volver al index si ya se ha iniciado sesión
 
